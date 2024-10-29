@@ -3,7 +3,8 @@ BUILD_DIR := build
 CC := gcc
 ASM := nasm
 ASMFLAGS := -f elf32
-CCFLAGS := -O3 -mgeneral-regs-only -mhard-float -static -m32 -fno-builtin -fno-builtin-function -fomit-frame-pointer -funsigned-char -falign-functions=16 -nostdlib -funsigned-char -Iinclude
+# sse3 support being considered...
+CCFLAGS := -O3 -fno-stack-protector -fPIE -msse -msse2 -mno-avx -mhard-float -static -m32 -fno-builtin -fno-builtin-function -fomit-frame-pointer -funsigned-char -falign-functions=16 -nostdlib -nostartfiles -funsigned-char -Iinclude
 LD := ld
 LDFLAGS := -m elf_i386
 MAKE := make
@@ -11,7 +12,7 @@ AR := ar
 
 ASM_SOURCES=$(wildcard src/*.asm)
 SOURCES=$(wildcard src/*.c)
-ASM_OBJECTS=$(patsubst src/%.asm,$(BUILD_DIR)/%.o,$(SOURCES))
+ASM_OBJECTS=$(patsubst src/%.asm,$(BUILD_DIR)/%.o,$(ASM_SOURCES))
 OBJECTS=$(patsubst src/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
 
 OUTPUT := libc.a
@@ -36,6 +37,12 @@ $(BUILD_DIR)/%.o: src/%.asm
 build: $(OBJECTS) $(ASM_OBJECTS)
 	${AR} cr ${OUTPUT} $^
 	chmod ${OUTPUT_PERMS} ${OUTPUT}
+
+test:
+	$(CC) $(CCFLAGS) test.c -c -o test.o
+	ld -m elf_i386 --no-dynamic-linker -pie test.o libc.a -o ssetest
+	tar -cf 1.tar ssetest
+	cp 1.tar ../lemonos/disks/1.tar
 
 clean:
 	rm -rf ${BUILD_DIR} ${OUTPUT}

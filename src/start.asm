@@ -1,18 +1,21 @@
 bits 32
 align 16
 
-extern main
+extern __runtime_entry
 extern _start
 _start:
-	add esp, 4 ; strange
-        pop eax
-        pop ecx
-        push ecx
-        push eax
-        call main
-        mov ebx, eax
-        mov eax, 1
-        int 0x80
+	; i am angery
+	sub esp, 0xf0
+	mov ebp, esp
+	and ebp, 0xfffffff0
+	mov eax, 0
+	mov ebx, 0
+	mov ecx, 0
+	mov edx, 0
+	call __runtime_entry
+	mov ebx, eax
+	mov eax, 1
+	int 0x80
 .loop:
-        hlt
-        jmp .loop
+	hlt
+	jmp .loop

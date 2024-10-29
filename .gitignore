@@ -1,0 +1,16 @@
+*.bin
+*.iso
+*.o
+*.elf
+*.log
+*.py
+*.tar
+*.private
+build/
+build/*
+.vscode/*
+.vscode/
+*.vsix
+*.json
+.git
+*.code-workspace

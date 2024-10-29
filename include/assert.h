@@ -1,3 +1,9 @@
 #pragma once
 
-void assert(int expr);
+#include <stdlib.h>
+
+static inline void assert(int expr) {
+        if (!expr) {
+                exit(-1);
+        }
+}

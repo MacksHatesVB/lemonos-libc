@@ -1,0 +1,15 @@
+#pragma once
+
+enum {
+	LOCALE_ENGLISH = 0,
+	LOCALE_GREEK,
+	LOCALE_SPANISH,
+	LOCALE_RUSSIAN,
+	LOCALE_KOREAN,
+	LOCALE_GERMAN,
+	LOCALE_NORWEGIAN,
+	LOCALE_ITALIAN,
+};
+
+int get_locale();
+void __locale_init();
