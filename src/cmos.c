@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 int cmos_updating() {
-	return (cmos_read_register(CMOS_STATUS_A) >> 7) & 1;
+	return (cmos_read_register(CMOS_STAT_A) >> 7) & 1;
 }
 
 uint8_t cmos_read_register(uint16_t reg) {
