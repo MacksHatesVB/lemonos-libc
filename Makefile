@@ -38,11 +38,5 @@ build: $(OBJECTS) $(ASM_OBJECTS)
 	${AR} cr ${OUTPUT} $^
 	chmod ${OUTPUT_PERMS} ${OUTPUT}
 
-test:
-	$(CC) $(CCFLAGS) test.c -c -o test.o
-	ld -m elf_i386 --no-dynamic-linker -pie test.o libc.a -o ssetest
-	tar -cf 1.tar ssetest
-	cp 1.tar ../lemonos/disks/1.tar
-
 clean:
 	rm -rf ${BUILD_DIR} ${OUTPUT}
