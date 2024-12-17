@@ -11,6 +11,14 @@ int cpu_get_temp() {
 	return syscall(SYSCALL_GETTHERM);
 }
 
+void * malloc(uint32_t size) {
+	return (void *) (uint32_t) syscall(SYSCALL_MALLOC, size);
+}
+
+void free(void * p) {
+	syscall(SYSCALL_FREE, p);
+}
+
 int syscall(const int number, ...) {
 	va_list listp;
 	va_list * argv;

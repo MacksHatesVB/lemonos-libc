@@ -1,6 +1,7 @@
 #pragma once
 
 void puts(char * text);
+void printf(char * fmt, ...);
 void outb(uint16_t port, uint8_t val);
 void outw(uint16_t port, uint16_t val);
 void outl(uint16_t port, long val);

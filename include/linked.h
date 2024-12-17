@@ -1,3 +1,5 @@
+#pragma once
+
 typedef struct linked {
 	void * p;
 	struct linked * next;

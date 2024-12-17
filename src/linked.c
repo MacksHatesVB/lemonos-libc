@@ -1,3 +1,5 @@
+// credit: roadrunner
+
 #include <linked.h>
 #include <stdlib.h>
 

@@ -1,12 +1,12 @@
 bits 32
 align 16
 
-extern hlt ; halt processor
+extern hlt ; sleepy for a little processor
 hlt:
 	hlt
 	ret
 
-extern sleep ; sleep !! FOREVER !!
+extern sleep ; sleepy forever
 sleep:
 	hlt
 	jmp sleep

@@ -1,15 +1,15 @@
 #include <graphics.h>
 #include <unistd.h>
+#include <string.h>
 
 uint8_t degrade_step(uint8_t c, uint8_t t) {
 	if (c == t) {
 		return c;
 	}
-	c -= 1;
 	if (t > c) {
-		c += 2;
+		return c + 1;
 	}
-	return c;
+	return c - 1;
 }
 
 uint32_t rgb_degrade(uint32_t colour, uint32_t target) {
@@ -30,6 +30,24 @@ uint32_t rgb_degrade(uint32_t colour, uint32_t target) {
 	g = degrade_step(g, tg);
 	b = degrade_step(b, tb);
 	return (r << 16) | (g << 8) | b | 0xff000000;
+}
+
+int rgb_diff(uint32_t c1, uint32_t c2) {
+	uint8_t r1, g1, b1;
+	uint8_t r2, g2, b2;
+	int dist = 0;
+	int dr, dg, db;
+	r1 = c1 >> 16;
+	g1 = c1 >> 8;
+	b1 = c1;
+	r2 = c2 >> 16;
+	g2 = c2 >> 8;
+	b2 = c2;
+	dr = abs32(r2 - r1);
+	dg = abs32(g2 - g1);
+	db = abs32(b2 - b1);
+	dist = (dr * dr) + (dg * dg) + (db * db);
+	return dist;
 }
 
 // from gdk-pixbuf (gdk-pixbuf/pixops/pixops.c)
@@ -59,6 +77,112 @@ uint32_t alpha_calculate(uint32_t top, uint32_t bottom) {
         return output;
 }
 
+uint32_t chroma_key_calculate(uint32_t top, uint32_t bottom, uint32_t key, int thresh) {
+	if (rgb_diff(top, key) < thresh) {
+		return bottom;
+	}
+	return top;
+}
+
+void rect_2d_draw(rect_2d_t * rect2, rect_2d_t * rect) {
+	uint32_t * dest;
+	uint32_t * src;
+	int height = rect->size.height;
+	int width = rect->size.width;
+	int absy = rect->y < 0 ? abs32(rect->y) : 0;
+	int absx = rect->x < 0 ? abs32(rect->x) : 0;
+	int pre_x = rect->x * 4;
+	int pre_r2width = rect2->size.width * 4;
+	int pre_rwidth = rect->size.width * 4;
+	if (height + rect->y >= rect2->size.height) {
+		height = rect2->size.height - rect->y;
+	}
+	if (width + rect->x >= rect2->size.width) {
+		width = rect2->size.width - rect->x;
+	}
+	for (int i = absy; i < height; i++) {
+		dest = (uint32_t *) (((void *) rect2->fb) + (((rect->y + i) * pre_r2width) + pre_x));
+		src = (uint32_t *) (((void *) rect->fb) + (i * pre_rwidth));
+		memcpy32(dest, src + absx, width - absx);
+	}
+	return;
+}
+
+void rect_2d_adraw(rect_2d_t * rect2, rect_2d_t * rect) {
+	uint32_t * dest;
+	uint32_t * src;
+	int height = rect->size.height;
+	int width = rect->size.width;
+	int absy = rect->y < 0 ? abs32(rect->y) : 0;
+	int absx = rect->x < 0 ? abs32(rect->x) : 0;
+	int pre_x = rect->x * 4;
+	int pre_r2width = rect2->size.width * 4;
+	int pre_rwidth = rect->size.width * 4;
+	if (height + rect->y >= rect2->size.height) {
+		height = rect2->size.height - rect->y;
+	}
+	if (width + rect->x >= rect2->size.width) {
+		width = rect2->size.width - rect->x;
+	}
+	for (int i = absy; i < height; i++) {
+		dest = (uint32_t *) (((void *) rect2->fb) + (((rect->y + i) * pre_r2width) + pre_x));
+		src = (uint32_t *) (((void *) rect->fb) + (i * pre_rwidth));
+		for (int b = absx; b < width; b++) {
+			if ((*(src + b) & 0xff000000) == 0) {
+				continue;
+			}
+			if ((*(src + b) & 0xff000000) == 0xff000000) {
+				*(dest + b) = *(src + b);
+				continue;
+			}
+			*(dest + b) = alpha_calculate(*(src + b), *(dest + b));
+		}
+	}
+	return;
+}
+
+void rect_2d_ckdraw(rect_2d_t * rect2, rect_2d_t * rect, int thresh) {
+	uint32_t * dest;
+	uint32_t * src;
+	int height = rect->size.height;
+	int width = rect->size.width;
+	int absy = rect->y < 0 ? abs32(rect->y) : 0;
+	int absx = rect->x < 0 ? abs32(rect->x) : 0;
+	int pre_x = rect->x * 4;
+	int pre_r2width = rect2->size.width * 4;
+	int pre_rwidth = rect->size.width * 4;
+	if (height + rect->y >= rect2->size.height) {
+		height = rect2->size.height - rect->y;
+	}
+	if (width + rect->x >= rect2->size.width) {
+		width = rect2->size.width - rect->x;
+	}
+	for (int i = absy; i < height; i++) {
+		dest = (uint32_t *) (((void *) rect2->fb) + (((rect->y + i) * pre_r2width) + pre_x));
+		src = (uint32_t *) (((void *) rect->fb) + (i * pre_rwidth));
+		for (int b = absx; b < width; b++) {
+			uint32_t top = *(src + b);
+			uint32_t bottom, tmp;
+			int dist = rgb_diff(top, 0x0000ff00);
+			if (dist < 32) {
+				continue;
+			}
+			if (dist > thresh) {
+				*(dest + b) = top;
+				continue;
+			}
+			bottom = *(dest + b);
+			top &= 0x00ffffff;
+			top |= 0xff000000 - ((top & 0x0000ff00) << 16);
+			tmp = alpha_calculate(top & 0xff00ff00, 0) & 0x0000ff00;
+			top &= 0xffff00ff;
+			top |= tmp & 0x00ffffff;
+			*(dest + b) = alpha_calculate(top, bottom); // chroma_key_calculate(*(src + b), *(dest + b), 0x00ff0000, thresh);
+		}
+	}
+	return;
+}
+
 window_t * create_window(uint16_t * title, uint16_t * progname, int width, int height) {
 	volatile window_spec_t windowspec;
 	windowspec.title = title;
@@ -66,7 +190,7 @@ window_t * create_window(uint16_t * title, uint16_t * progname, int width, int h
 	windowspec.width = width;
 	windowspec.height = height;
 
-	// todo: something else later
+	// todo: find PID programatically, WM is only PID 3 on LemonOS
 	ipc(3, 0, (void *) &windowspec);
 
 	return windowspec.output;

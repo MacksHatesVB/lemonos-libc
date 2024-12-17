@@ -16,3 +16,4 @@ int abs32(int x);
 signed short abs16(signed short x);
 signed char abs8(signed char x);
 long double logl(long double base, long double number);
+long double pow(long double, long double);

@@ -4,7 +4,6 @@ align 16
 extern __runtime_entry
 extern _start
 _start:
-	; i am angery
 	sub esp, 0xf0
 	mov ebp, esp
 	and ebp, 0xfffffff0

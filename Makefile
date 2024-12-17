@@ -18,7 +18,7 @@ OBJECTS=$(patsubst src/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
 OUTPUT := libc.a
 
 # chmod 554 $(OUTPUT)
-OUTPUT_PERMS := 554
+OUTPUT_PERMS := 664
 
 TEST_PROGRAM := main.c
 TEST_OUTPUT := main

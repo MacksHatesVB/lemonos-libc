@@ -1,5 +1,7 @@
 #include <stdint.h>
 
+// dont fuck with these please
+
 uint64_t cpu_read_msr(uint32_t ecx) {
 	uint64_t value;
 	asm volatile (
