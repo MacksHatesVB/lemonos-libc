@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 void puts(char * text);
 void printf(char * fmt, ...);
 void outb(uint16_t port, uint8_t val);

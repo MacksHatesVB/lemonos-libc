@@ -2,6 +2,9 @@
 
 #include <stdint.h>
 
+typedef struct event event_t;
+typedef void (* input_callback_t)(event_t * event);
+
 typedef struct event {
 	int type;
 } event_t;

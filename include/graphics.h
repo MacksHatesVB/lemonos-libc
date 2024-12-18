@@ -2,32 +2,33 @@
 
 #include <stdint.h>
 #include <math.h>
+#include <events.h>
 
 typedef void (* font_drawer_t)(uint32_t * fb, uint32_t chr, uint32_t colour, uint32_t position); // character drawer
 typedef int (* gfx_callback_t)(); // generic callback for anything
 typedef void (* gfx_accelerator_call_t)(); // ...
 
 typedef struct size_2d {
-	int width;
+	int width; // self explainitory
 	int height;
 } size_2d_t;
 
 typedef struct _rect_2d {
-	int x;
+	int x; // position (meaningless in window_t)
 	int y;
-	vect_2d_t cursor;
-	uint32_t * fb;
-	size_2d_t size;
-	int bpp;
-	int updated;
+	vect_2d_t cursor; // cursor position
+	uint32_t * fb; // my image
+	size_2d_t size; // my size
+	int bpp; // my bpp (meaningless currently)
+	int updated; // has my image changed (meaningless currently)
 } rect_2d_t;
 
 typedef struct {
-	uint32_t * icon;
-	uint16_t * text;
-	gfx_callback_t click;
-	gfx_callback_t contextmenu;
-	gfx_callback_t textupdate;
+	uint32_t * icon; // my icon image
+	uint16_t * text; // my text
+	gfx_callback_t onclick; // notifications
+	gfx_callback_t oncontextmenu;
+	gfx_callback_t ontextupdate;
 	// misnomer
 	int x;
 	int y;
@@ -35,11 +36,11 @@ typedef struct {
 
 // dont try and fuck with some of this yourself
 typedef struct _window {
-	rect_2d_t rect;
-	uint16_t * text;
-	rect_2d_t text_rect;
-	int id;
-	int x;
+	rect_2d_t rect; // my silly image
+	uint16_t * text; // title
+	rect_2d_t text_rect; // prerendered text optimization
+	int id; // 0
+	int x; //position
 	int y;
 	int drawx; // solve racist condition
 	int drawy;
@@ -47,15 +48,15 @@ typedef struct _window {
 	int z;
 	int shown; // is shown?
 	int drawer;
-	gfx_callback_t onopen;
+	gfx_callback_t onopen; // notifications
 	gfx_callback_t onfocus;
 	gfx_callback_t onclose;
 	gfx_callback_t ondraw;
 	gfx_callback_t onresize;
 	gfx_callback_t onmove;
-	gfx_callback_t textupdate;
-	input_callback_t send_event;
-	taskbar_button_t * taskbar;
+	gfx_callback_t ontextupdate;
+	input_callback_t handle_event; // event handler
+	taskbar_button_t * taskbar; // my taskbar icon
 } window_t;
 
 typedef struct {

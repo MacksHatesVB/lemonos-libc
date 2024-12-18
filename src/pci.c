@@ -23,11 +23,11 @@ uint16_t pci_config_inw(uint8_t bus, uint8_t slot, uint8_t function, uint8_t off
 	return inl(0xcfc + (offset & 3));
 }
 
-
 uint32_t pci_config_ind(uint8_t bus, uint8_t slot, uint8_t function, uint8_t offset) {
 	pci_config_set_addr(bus, slot, function, offset);
 	return inl(0xcfc);
 }
+
 
 uint32_t pci_config_outb(uint8_t bus, uint8_t slot, uint8_t function, uint8_t offset, uint8_t d) {
 	pci_config_set_addr(bus, slot, function, offset);
