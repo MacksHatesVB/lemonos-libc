@@ -77,6 +77,7 @@ uint32_t alpha_calculate(uint32_t top, uint32_t bottom) {
         return output;
 }
 
+// busted currently
 uint32_t chroma_key_calculate(uint32_t top, uint32_t bottom, uint32_t key, int thresh) {
 	if (rgb_diff(top, key) < thresh) {
 		return bottom;
