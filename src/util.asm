@@ -31,7 +31,7 @@ save_irq:
 
 extern restore_irq ; restore interrupt flag
 restore_irq:
-	pop eax
+	mov eax, [esp+4]
 	test eax, eax
 	jz .no
 	sti
