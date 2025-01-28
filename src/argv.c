@@ -11,3 +11,7 @@ int args_contains(char * argv[], char * needle) {
 	}
 	return 0;
 }
+
+int args_contains_long(char * argv[], char * shortname, char * longname) {
+	return args_contains(argv, shortname) || args_contains(argv, longname);
+}
