@@ -4,6 +4,7 @@ align 16
 extern __runtime_entry
 extern _start
 _start:
+	push esp
 	call __runtime_entry
 	mov ebx, eax
 	mov eax, 1
