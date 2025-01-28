@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdio.h>
+#include <string.h>
 
 int args_contains(char * argv[], char * needle) {
 	int i = 0;
