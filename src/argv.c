@@ -1,7 +1,9 @@
-#include <stdarg.h>
+#include <stddef.h>
+#include <stdio.h>
 
 int args_contains(char * argv[], char * argument) {
-	for (char * arg = argv[0], int i = 0; arg != NULL; arg = argv[i++]) {
+	int i = 0;
+	for (char * arg = argv[0]; arg != NULL; arg = argv[i++]) {
 		printf("%s\n", arg);
 	}
 }

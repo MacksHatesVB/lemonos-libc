@@ -4,9 +4,9 @@ align 16
 extern __runtime_entry
 extern _start
 _start:
-	pop ecx
+	pop eax
 	push esp
-	push ecx
+	push eax
 	call __runtime_entry
 	mov ebx, eax
 	mov eax, 1
