@@ -8,13 +8,13 @@ void ulldtoa(uint64_t val, char * buf, int base);
 void lldtoustr(int64_t val, uint16_t * buf, int base);
 void lldtoa(int64_t val, char * buf, int base);
 char * ftoa(double f, char * buf, int precision);
+int strcmp(char * x, char * y);
 int strlen(const char * string);
 int ustrlen(const uint16_t * string);
 void * memset(void * dest, int val, size_t length);
 void * memcpy(void * dest, const void * src, size_t length);
 
 // todo: not this
-
 static inline uint32_t * memset32(uint32_t * dest, uint32_t val, size_t length) {
 	void * temp = dest;
 	__asm__ volatile (
