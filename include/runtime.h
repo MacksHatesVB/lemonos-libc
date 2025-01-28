@@ -2,4 +2,4 @@
 
 extern int __is_lemonos;
 
-int main(int argc, char * argv);
+int main(int argc, char * argv[]);
