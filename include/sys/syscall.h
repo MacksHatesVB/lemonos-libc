@@ -61,3 +61,5 @@ enum {
 	LCTL_CPU_VENDOR_MAGIC,
 	LCTL_PERF_STATE_MAGIC,
 };
+
+int syscall(const int number, ...);
