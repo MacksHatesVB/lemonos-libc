@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stddef.h>
 
 int open(char * name, int flags);
 ssize_t write(int fd, const void * buf, size_t count);
