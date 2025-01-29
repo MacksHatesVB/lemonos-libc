@@ -4,10 +4,11 @@
 
 int args_contains(int argc, char * argv[], char * needle) {
 	int i = 0;
-	for (char * arg = argv[0]; i < argc; arg = argv[i++]) {
+	for (char * arg = argv[0]; i < argc; arg = argv[i]) {
 		if (strcmp(arg, needle) == 0) {
 			return 1;
 		}
+		i++;
 	}
 	return 0;
 }
