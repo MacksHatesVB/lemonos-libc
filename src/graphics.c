@@ -191,7 +191,7 @@ window_t * create_window(uint16_t * title, uint16_t * progname, int width, int h
 	windowspec.width = width;
 	windowspec.height = height;
 
-	// todo: find PID programatically, WM is only PID 3 on LemonOS
+	// todo: replace this with driver API call once that is finished
 	ipc(3, 0, (void *) &windowspec);
 
 	return windowspec.output;
