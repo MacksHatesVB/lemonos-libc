@@ -175,9 +175,6 @@ void args_call_callback(void * p, args_option_t * option, char * arg, void * pri
 				callback(priv, option, 0, 0);
 				break;
 			}
-			if (args_type_check(arg, option)) {
-				break;
-			}
 			callback(priv, option, atoi(arg), 1);
 			break;
 		}
@@ -185,9 +182,6 @@ void args_call_callback(void * p, args_option_t * option, char * arg, void * pri
 			args_float_callback_t callback = (args_float_callback_t) p;
 			if (!arg) {
 				callback(priv, option, 0, 0);
-				break;
-			}
-			if (args_type_check(arg, option)) {
 				break;
 			}
 			callback(priv, option, atof(arg), 1);
@@ -301,6 +295,10 @@ int args_parse(int argc, char * argv[], int optionc, args_option_t * options, vo
 			continue;
 		}
 		char * arg = args_get_argument(argc, argv, i + 1, option);
+		if (args_type_check(arg, option)) {
+			i++;
+			continue;
+		}
 		option->flags |= ARG_FOUND;
 		found++;
 		if (settings.allow_dups) {
