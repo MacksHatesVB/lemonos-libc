@@ -55,6 +55,9 @@ args_option_t * args_find(char * arg, int optionc, args_option_t * options) {
 	char * long_name = arg + 2; // get past --
 	switch (is_short) {
 		case 1:
+			if (options->short_name == 0) {
+				return NULL; // deactivated
+			}
 			for (int i = 0; i < optionc; i++) {
 				args_option_t * option = &options[i];
 				if (option->short_name == short_name) {
@@ -63,6 +66,9 @@ args_option_t * args_find(char * arg, int optionc, args_option_t * options) {
 			}
 			break;
 		case 0:
+			if (!options->long_name) {
+				return NULL; // deactivated
+			}
 			for (int i = 0; i < optionc; i++) {
 				args_option_t * option = &options[i];
 				if (strcmp(option->long_name, long_name) == 0) {
@@ -97,13 +103,22 @@ void safe_print(char * string, char end) {
 // bootiful!
 void args_print_help(int argc, char * argv[], int optionc, args_option_t * options) {
 	char * name = (argc >= 1) ? basename(argv[0]) : "PROGNAME"; // LemonOS for example can call us with __nothing__ in argv, so do this
-	printf("Usage: %s [OPTION]...\n", name);
+	args_option_t * option = NULL;
+	printf("Usage: %s [OPTION]...", name);
+	if (option = args_find("-\x01", optionc, options)) {
+		printf(" [%s]", option->help);
+	}
+	printf("\n");
 	safe_print(settings.description, '\n');
 	printf("\n");
 	for (int i = 0; i < optionc; i++) {
 		args_option_t * option = &options[i];
-		int tab_length = 22 - strlen(option->long_name); // todo: handle this a little differently (and make this stdlib function?)
-		printf("  -%c, --%s", option->short_name, option->long_name);
+		if (option->short_name == 1) {
+			continue;
+		}
+		int tab_length = 22 - (option->long_name ? strlen(option->long_name) : 0); // todo: handle this a little differently (and make this stdlib function?)
+		printf((option->short_name == 0) ? "      " : "  -%c%c ", option->short_name, option->long_name ? ',' : ' ');
+		printf(option->long_name ? "--%s" : "  ", option->long_name);
 		while (tab_length-- > 0) { putc(' '); } // yeah
 		safe_print(option->help, '\0');
 		printf("\n");
@@ -156,6 +171,15 @@ void args_call_callback(void * p, args_option_t * option, char * arg, void * pri
 	}
 	if (option->type == TYPE_BOOL) {
 		args_bool_callback_t callback = (args_bool_callback_t) p;
+		if (option->wants_argument) {
+			int b = string2bool(arg);
+			if (b == -1) {
+				callback(priv, option, 0);
+				return;
+			}
+			callback(priv, option, b);
+			return;
+		}
 		callback(priv, option, (option->flags & ARG_FOUND) != 0);
 		return;
 	}
@@ -277,6 +301,7 @@ int args_do_defaults(int argc, char * argv[], int optionc, args_option_t * optio
 int args_parse(int argc, char * argv[], int optionc, args_option_t * options, void * priv) {
 	int i = 1;
 	int found = 0;
+	char * argument = NULL; // i have a limited vocabulary, wtf do i call this ??
 	args_option_state_t * states = args_make_states(optionc, options);
 	if (!states) {
 		return -1;
@@ -292,6 +317,7 @@ int args_parse(int argc, char * argv[], int optionc, args_option_t * options, vo
 	for (char * arg = argv[1]; i < argc; arg = argv[i]) {
 		int size = strlen(arg);
 		if (!args_is_valid(arg, size)) {
+			argument = arg;
 			i++;
 			continue;
 		}
@@ -341,6 +367,12 @@ int args_parse(int argc, char * argv[], int optionc, args_option_t * options, vo
 		if (!settings.allow_dups) {
 			args_call_callback(option->callback, option, state->arg, priv);
 		}
+	}
+
+	args_option_t * option = args_find("-\x01", optionc, options);
+	if (option && argument) {
+		args_call_callback(option->callback, option, argument, priv);
+		found++;
 	}
 
 	free(states);

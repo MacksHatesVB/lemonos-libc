@@ -53,8 +53,13 @@ int main(int argc, char * argv[]) {
 		{'I', "int2",	1, TYPE_INT,	ARG_DISABLE_CHECKS,	int_callback,		.help="test argument, wants int argument"},
 		{'f', "float",	1, TYPE_FLOAT,	ARG_ARGUMENT_REQUIRED,	float_callback,		.help="test argument, wants float argument"},
 		{'F', "float2",	1, TYPE_FLOAT,	ARG_NO_CASTS,		float_callback,		.help="test argument, wants float argument"},
-		{'b', "bool",	0, TYPE_BOOL,	0,			bool_callback,		.help="test argument"},
+		{'b', "bool",	1, TYPE_BOOL,	0,			bool_callback,		.help="test argument"},
+		{'B', "bool2",	1, TYPE_BOOL,	ARG_ARGUMENT_REQUIRED,	bool_callback,		.help="test argument, wants bool argument"},
 		{'n', "noarg",	0, TYPE_NULL,	0,			callback,		.help="test argument"},
+		{'S', NULL,	0, TYPE_NULL,	0,			callback,		.help="test argument, no long name"},
+		{'\0',"noshort",0, TYPE_NULL,	0,			callback,		.help="test argument, no short name"},
+		{'\0', NULL,	0, TYPE_NULL,	0,			callback,		.help="test argument, neither"},
+		{'\x01',"count",1, TYPE_INT,	0,			int_callback,		.help="INT"},
 	};
 	int options_count = sizeof(options) / sizeof(options[0]);
 

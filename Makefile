@@ -6,7 +6,7 @@ ASMFLAGS := -f elf32
 # sse3 support being considered...
 CCFLAGS := -O3 -fno-stack-protector -fPIE -msse -msse2 -mno-avx -static -mhard-float -m32 -fno-builtin -fno-builtin-function -fomit-frame-pointer -funsigned-char -falign-functions=16 -nostdlib -nostartfiles -funsigned-char -Iinclude
 LD := ld
-LDFLAGS := -m elf_i386
+LDFLAGS := -m elf_i386 --no-dynamic-linker -pie
 MAKE := make
 AR := ar
 
@@ -37,7 +37,8 @@ $(BUILD_DIR)/%.o: src/%.asm
 build: $(OBJECTS) $(ASM_OBJECTS)
 	$(AR) cr $(OUTPUT) $^
 	chmod $(OUTPUT_PERMS) $(OUTPUT)
-	$(CC) $(CCFLAGS) $(TEST_PROGRAM) $(OUTPUT) -o $(TEST_OUTPUT)
+	$(CC) $(CCFLAGS) $(TEST_PROGRAM) -c -o $(TEST_OUTPUT).o
+	$(LD) $(LDFLAGS) -Tlink.ld $(TEST_OUTPUT).o $(OUTPUT) -o $(TEST_OUTPUT)
 
 clean:
 	rm -rf ${BUILD_DIR} ${OUTPUT}

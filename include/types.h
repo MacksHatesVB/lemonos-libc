@@ -11,4 +11,5 @@ enum {
 	TYPE_BOOL,
 };
 
+int string2bool(char * string);
 int guess_string_type(char *);
