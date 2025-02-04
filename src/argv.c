@@ -143,14 +143,20 @@ int args_type_check(char * arg, args_option_t * option) {
 	if (option->type == TYPE_NULL) {
 		return 1;
 	}
-	if (settings.allow_bad_types || ((option->flags & ARG_DISABLE_CHECKS) != 0)) {
+	if (settings.allow_bad_types || ((option->flags & ARG_DISABLE_CHECKS) != 0) || option->type == TYPE_BOOL) {
 		return 0;
 	}
 	return guess_string_type(arg) == TYPE_STRING;
 }
 
 void args_call_callback(void * p, args_option_t * option, char * arg, void * priv) {
+	// todo: remove the amount of ifs, holy moly
 	if (option->wants_argument && !arg && (option->flags & ARG_ARGUMENT_REQUIRED) != 0) {
+		return;
+	}
+	if (option->type == TYPE_BOOL) {
+		args_bool_callback_t callback = (args_bool_callback_t) p;
+		callback(priv, option, (option->flags & ARG_FOUND) != 0);
 		return;
 	}
 	if (!option->wants_argument) {
@@ -324,6 +330,11 @@ int args_parse(int argc, char * argv[], int optionc, args_option_t * options, vo
 				free(states);
 				args_do_defaults(argc, argv, optionc, options, 0);
 				return 1; // required argument not passed
+			}
+
+			// well must always call bool's callback
+			if (option->type == TYPE_BOOL) {
+				args_call_callback(option->callback, option, NULL, priv);
 			}
 			continue;
 		}

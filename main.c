@@ -34,6 +34,10 @@ void float_callback(void * priv, args_option_t * option, float arg, int has_arg)
 	printf("\n");
 }
 
+void bool_callback(void * priv, args_option_t * option, int present) {
+	printf("got: --%s %s\n", option->long_name, present ? "true" : "false");
+}
+
 int main(int argc, char * argv[]) {
 	args_progspec_t spec[] = {
 		"LemonOS stdlib", "1.0", "Lemon",
@@ -49,6 +53,7 @@ int main(int argc, char * argv[]) {
 		{'I', "int2",	1, TYPE_INT,	ARG_DISABLE_CHECKS,	int_callback,		.help="test argument, wants int argument"},
 		{'f', "float",	1, TYPE_FLOAT,	ARG_ARGUMENT_REQUIRED,	float_callback,		.help="test argument, wants float argument"},
 		{'F', "float2",	1, TYPE_FLOAT,	ARG_NO_CASTS,		float_callback,		.help="test argument, wants float argument"},
+		{'b', "bool",	0, TYPE_BOOL,	0,			bool_callback,		.help="test argument"},
 		{'n', "noarg",	0, TYPE_NULL,	0,			callback,		.help="test argument"},
 	};
 	int options_count = sizeof(options) / sizeof(options[0]);
