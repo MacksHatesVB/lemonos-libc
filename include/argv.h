@@ -27,6 +27,7 @@ typedef struct {
 } args_option_state_t;
 
 typedef struct {
+	uint32_t stack_positionals : 1;
 	uint32_t allow_option_arguments : 1;
 	uint32_t allow_bad_types : 1;
 	uint32_t allow_dups : 1;
@@ -87,6 +88,7 @@ enum {
 	ARG_NO_CASTS          = 0b00001000, // shared with args_option_t->flags
 	ARG_SILENT            = 0b00010000,
 	ARG_DEFAULT_TO_HELP   = 0b00100000,
+	ARG_STACK_POSITIONALS = 0b01000000,
 };
 
 enum {

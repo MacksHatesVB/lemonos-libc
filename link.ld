@@ -14,6 +14,12 @@ SECTIONS
 			*(.bss .bss.*)
 			*(COMMON)
 		}
+		.reloc : {
+			*(.reloc .reloc.*)
+		}
+		.rel : {
+			*(.rel .rel.*)
+		}
 		/DISCARD/ : {
 			*(.note.*)
 			*(.comment .comment.*)

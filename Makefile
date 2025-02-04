@@ -4,9 +4,9 @@ CC := gcc
 ASM := nasm
 ASMFLAGS := -f elf32
 # sse3 support being considered...
-CCFLAGS := -O3 -fno-stack-protector -fPIE -msse -msse2 -mno-avx -static -mhard-float -m32 -fno-builtin -fno-builtin-function -fomit-frame-pointer -funsigned-char -falign-functions=16 -nostdlib -nostartfiles -funsigned-char -Iinclude
+CCFLAGS := -O3 -fno-stack-protector -fPIE -fPIC -fPIE -pie -fpic -msse -msse2 -mno-avx -mhard-float -static -m32 -fno-builtin -fno-builtin-function -fomit-frame-pointer -funsigned-char -falign-functions=16 -ffreestanding -nostdlib -nostartfiles -funsigned-char -Iinclude
 LD := ld
-LDFLAGS := -m elf_i386 --no-dynamic-linker -pie
+LDFLAGS := -m elf_i386 --no-dynamic-linker -pie -pic
 MAKE := make
 AR := ar
 

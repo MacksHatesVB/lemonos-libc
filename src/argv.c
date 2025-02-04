@@ -106,7 +106,7 @@ void args_print_help(int argc, char * argv[], int optionc, args_option_t * optio
 	args_option_t * option = NULL;
 	printf("Usage: %s [OPTION]...", name);
 	if (option = args_find("-\x01", optionc, options)) {
-		printf(" [%s]", option->help);
+		printf(" [%s]...", option->help);
 	}
 	printf("\n");
 	safe_print(settings.description, '\n');
@@ -298,10 +298,33 @@ int args_do_defaults(int argc, char * argv[], int optionc, args_option_t * optio
 	}
 }
 
+void args_positionals_interate(dynarray_t ** positionals, void * callback, args_option_t * option, void * priv) {
+	dynarray_t * array = *positionals;
+	if (!settings.stack_positionals) {
+		char * positional = (char *) array;
+		args_call_callback(callback, option, positional, priv);
+		return;
+	}
+	char ** args = array->array;
+	for (int i = 0; i < array->size; i++) {
+		char * arg = args[i];
+		args_call_callback(callback, option, arg, priv);
+	}
+}
+
+void args_set_positional(dynarray_t ** positionals, char * arg) {
+	if (!settings.stack_positionals) {
+		char ** positional = (char **) positionals;
+		*positional = arg;
+		return;
+	}
+	*positionals = dyna_append(*positionals, &arg, 4);
+}
+
 int args_parse(int argc, char * argv[], int optionc, args_option_t * options, void * priv) {
 	int i = 1;
 	int found = 0;
-	char * argument = NULL; // i have a limited vocabulary, wtf do i call this ??
+	dynarray_t * positionals = NULL; // i have a limited vocabulary, wtf do i call this ??
 	args_option_state_t * states = args_make_states(optionc, options);
 	if (!states) {
 		return -1;
@@ -317,7 +340,7 @@ int args_parse(int argc, char * argv[], int optionc, args_option_t * options, vo
 	for (char * arg = argv[1]; i < argc; arg = argv[i]) {
 		int size = strlen(arg);
 		if (!args_is_valid(arg, size)) {
-			argument = arg;
+			args_set_positional(&positionals, arg);
 			i++;
 			continue;
 		}
@@ -370,8 +393,8 @@ int args_parse(int argc, char * argv[], int optionc, args_option_t * options, vo
 	}
 
 	args_option_t * option = args_find("-\x01", optionc, options);
-	if (option && argument) {
-		args_call_callback(option->callback, option, argument, priv);
+	if (option && positionals) {
+		args_positionals_interate(&positionals, option->callback, option, priv);
 		found++;
 	}
 
@@ -426,6 +449,7 @@ void args_set_help_character(char chr) {
 }
 
 void args_setup(uint32_t flags) {
+	settings.stack_positionals = (flags & ARG_STACK_POSITIONALS) != 0;
 	settings.allow_option_arguments = (flags & ALLOW_OPTIONS_AS_ARGS) != 0;
 	settings.allow_bad_types = (flags & ALLOW_INCORRECT_TYPES) != 0;
 	settings.default_to_help = (flags & ARG_DEFAULT_TO_HELP) != 0;

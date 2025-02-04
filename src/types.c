@@ -7,10 +7,6 @@ int _my_isdigit(char chr) {
 }
 
 // todo: get rid of this
-static char * disapproving[] = {"false", "no", "non", "nope", "nah", "❌"};
-static char * approving[] = {"true", "yes", "yep", "yeah", "✅"};
-static int disapproving_size = sizeof(disapproving) / sizeof(char *);
-static int approving_size = sizeof(approving) / sizeof(char *);
 int string2bool(char * string) {
 	if (!string) {
 		return -1;
@@ -24,7 +20,13 @@ int string2bool(char * string) {
 		if (c == '1' || c == 'y' || c == 'o') {
 			return 1;
 		}
+		return -1;
 	}
+
+	char * disapproving[] = {"false", "no", "non", "nope", "nah", "❌"};
+	char * approving[] = {"true", "yes", "yep", "yeah", "✅"};
+	int disapproving_size = sizeof(disapproving) / sizeof(disapproving[0]);
+	int approving_size = sizeof(approving) / sizeof(approving[0]);
 	for (int i = 0; i < disapproving_size; i++) {
 		char * disaprove = disapproving[i];
 		if (strcmp(disaprove, string) == 0) {

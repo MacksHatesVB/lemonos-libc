@@ -6,10 +6,14 @@
 
 dynarray_t * dyna_create(uint32_t size, uint32_t block_size) {
 	dynarray_t * array = malloc(sizeof(dynarray_t));
+	if (!array) {
+		return NULL;
+	}
 	array->size = size;
 	array->real_size = size;
 	array->block_size = block_size;
 	array->array = malloc(size * block_size);
+	return array;
 }
 
 dynarray_t * dyna_swap(dynarray_t * array, uint32_t size, uint32_t block_size) {
@@ -60,5 +64,19 @@ dynarray_t * dyna_reserve(dynarray_t * array, uint32_t size, uint32_t block_size
 	}
 	uint32_t new_size = array->size + round32(size - array->size, 8);
 	dyna_grow(array, new_size, block_size);
+	return array;
+}
+
+dynarray_t * dyna_append(dynarray_t * array, void * p, uint32_t block_size) {
+	if (!array) {
+		array = dyna_create(1, block_size);
+		memcpy(array->array, p, block_size);
+		return array;
+	}
+	if (array->size == array->real_size || array->size == 0) {
+		array = dyna_grow(array, 1, block_size);
+	}
+	memcpy(array->array + (array->size * array->block_size), p, block_size);
+	array->size++;
 	return array;
 }

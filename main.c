@@ -59,11 +59,11 @@ int main(int argc, char * argv[]) {
 		{'S', NULL,	0, TYPE_NULL,	0,			callback,		.help="test argument, no long name"},
 		{'\0',"noshort",0, TYPE_NULL,	0,			callback,		.help="test argument, no short name"},
 		{'\0', NULL,	0, TYPE_NULL,	0,			callback,		.help="test argument, neither"},
-		{'\x01',"count",1, TYPE_INT,	0,			int_callback,		.help="INT"},
+		{'\x01',"count",1, TYPE_INT,	0,			int_callback,		.help="COUNT"},
 	};
 	int options_count = sizeof(options) / sizeof(options[0]);
 
-	args_setup(ARG_DEFAULT_TO_HELP); // show help if there are no arguments
+	args_setup(ARG_DEFAULT_TO_HELP | ARG_STACK_POSITIONALS); // show help if there are no arguments
 	args_load_spec(spec);
 	args_parse(argc, argv, options_count, options, NULL);
 	args_unsetup();
