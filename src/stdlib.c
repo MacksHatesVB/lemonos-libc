@@ -11,11 +11,30 @@ int cpu_get_temp() {
 	return syscall(SYSCALL_GETTHERM);
 }
 
+void * brk(uintptr_t _break) {
+	return (void *) (uint32_t) syscall(45, _break); // CHANGE ME
+}
+
 void * malloc(uint32_t size) {
+	if (!__is_lemonos) {
+		void * p = brk(0);
+		void * newbrk = brk(((uintptr_t) p) + size);
+		if (newbrk == (void *) -1) {
+			return NULL;
+		}
+		return p;
+	}
 	return (void *) (uint32_t) syscall(SYSCALL_MALLOC, size);
 }
 
+void exit(int code) {
+	syscall(SYSCALL_EXIT, code);
+}
+
 void free(void * p) {
+	if (p == NULL) {
+		return;
+	}
 	syscall(SYSCALL_FREE, p);
 }
 

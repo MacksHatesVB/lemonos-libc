@@ -3,13 +3,20 @@
 #include <stdint.h>
 #include <stddef.h>
 
+int isdigit(int c);
+int isblank(int c);
+int isspace(int c);
 void ulldtoustr(uint64_t val, uint16_t * buf, int base);
 void ulldtoa(uint64_t val, char * buf, int base);
 void lldtoustr(int64_t val, uint16_t * buf, int base);
 void lldtoa(int64_t val, char * buf, int base);
+long strtol(const char* str);
+int atoi(char * string);
 char * ftoa(double f, char * buf, int precision);
+float atof(char * s);
 int strcmp(char * x, char * y);
 int strlen(const char * string);
+char * strdup(char * string);
 int ustrlen(const uint16_t * string);
 void * memset(void * dest, int val, size_t length);
 void * memcpy(void * dest, const void * src, size_t length);

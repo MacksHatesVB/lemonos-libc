@@ -1,7 +1,23 @@
+#include <stdlib.h>
+#include <string.h>
 #include <stdint.h>
 #include <stddef.h>
 
 // todo: clean this shit up, accelerate with sse and avx
+// q: ¿sse and avx acceleration done for us by gcc?
+
+int isdigit(int c) {
+	return c >= '0' && c <= '9';
+}
+
+int isblank(int c) {
+	return c == ' ' || c == '\t';
+}
+
+int isspace(int c) {
+	return isblank(c) || c == '\f' || c == '\n' || c == '\r' || c == '\v';
+}
+
 void ulldtoustr(uint64_t val, uint16_t * buf, int base) {
 	static uint16_t rbuf[64];
 	uint16_t * ptr = rbuf;
@@ -27,7 +43,7 @@ void ulldtoa(uint64_t val, char * buf, int base) {
 		*ptr++ = '0';
 	}
 	while (val) {
-		int digit = (uint64_t)((uint64_t) val % (long) base);
+		int digit = (uint64_t) ((uint64_t) val % (long) base);
 		*ptr++ = digit < 10 ? (digit + '0') : (digit - 10 + 'a');
 		val /= base;
 	}
@@ -50,7 +66,7 @@ void lldtoustr(int64_t val, uint16_t * buf, int base) {
                 *ptr++ = '0';
         }
         while (val) {
-                int digit = (uint64_t)((uint64_t) val % (long) base);
+                int digit = (uint64_t) ((uint64_t) val % (long) base);
                 *ptr++ = digit < 10 ? (digit + '0') : (digit - 10 + 'a');
                 val /= base;
         }
@@ -76,7 +92,7 @@ void lldtoa(int64_t val, char * buf, int base) {
                 *ptr++ = '0';
         }
         while (val) {
-                int digit = (uint64_t)((uint64_t) val % (long) base);
+                int digit = (uint64_t) ((uint64_t) val % (long) base);
                 *ptr++ = digit < 10 ? (digit + '0') : (digit - 10 + 'a');
                 val /= base;
         }
@@ -88,6 +104,31 @@ void lldtoa(int64_t val, char * buf, int base) {
                 *buf++ = *ptr--;
         }
         *buf = 0;
+}
+
+long strtol(const char * str) {
+	long acc = 0;
+	int sign = 1;
+
+	while (isspace(*str)) str++;
+
+	if (*str == u'+') {
+		str++;
+	} else if (*str == u'-') {
+		sign = -1;
+		str++;
+	}
+
+	while (*str && isdigit(*str)) {
+		acc = acc * 10 + (*str - u'0');
+		str++;
+	}
+
+	return sign > 0 ? acc : -acc;
+}
+
+int atoi(char * string) {
+	return strtol(string);
 }
 
 /**
@@ -175,6 +216,37 @@ char * ftoa(double f, char * buf, int precision) {
         }
 	return buf;
 }
+// thanks stack overflow user242579
+float atof(char * arr) {
+	float val = 0;
+	int afterdot = 0;
+	float scale = 1;
+	int neg = 0;
+
+	if (*arr == '-') {
+		arr++;
+		neg = 1;
+	}
+	while (*arr) {
+		if (afterdot) {
+			scale = scale/10;
+			val = val + (*arr-'0')*scale;
+		} else {
+			if (*arr == '.') {
+				afterdot++;
+			} else {
+				val = val * 10.0 + (*arr - '0');
+			}
+		}
+		arr++;
+	}
+	if (neg) {
+		return -val;
+	} else {
+		return  val;
+	}
+}
+
 
 int strcmp(char * x, char * y) {
 	int i = 0;
@@ -201,6 +273,16 @@ int ustrlen(const uint16_t * string) {
 		i++;
 	}
 	return i;
+}
+
+char * strdup(char * string) {
+	if (!string) {
+		return NULL;
+	}
+	int size = strlen(string);
+	char * new = malloc(size + 1);
+	memcpy(new, string, size + 1);
+	return new;
 }
 
 void * memset(void * dest, int val, size_t length) {
