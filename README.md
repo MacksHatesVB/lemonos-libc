@@ -1,1 +1,1 @@
-# libc but LemonOS
+# libc for LemonOS
