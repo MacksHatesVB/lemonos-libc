@@ -106,11 +106,11 @@ void printf(char * fmt, ...) {
 					break;
 				case u's':
 				case u'8':
-					str = (char *) va_arg(*argv, uint16_t *);
+					str = (char *) va_arg(*argv, char *);
 					puts(str);
 					break;
 				case u'c':
-					ul = (char) va_arg(*argv, uint16_t);
+					ul = (char) va_arg(*argv, char);
 					putchar(ul);
 					break;
 				case u'%':
