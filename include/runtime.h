@@ -1,5 +1,5 @@
 #pragma once
 
-extern int __is_lemonos;
+#include <linked.h>
 
-int main(int argc, char * argv[]);
+extern int __is_lemonos;

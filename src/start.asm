@@ -5,7 +5,10 @@ extern __runtime_entry
 extern _start
 _start:
 	pop eax
-	push esp
+	mov ecx, esp
+	and esp, 0xfffffff0
+	sub esp, 8
+	push ecx
 	push eax
 	call __runtime_entry
 	mov ebx, eax

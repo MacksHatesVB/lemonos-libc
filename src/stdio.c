@@ -23,7 +23,7 @@ void puts(char * text) {
 	syscall(SYSCALL_WRITE, 1, text, strlen(text));
 }
 
-void putc(char chr) {
+void putchar(char chr) {
 	syscall(SYSCALL_WRITE, 1, &chr, 1);
 }
 
@@ -45,7 +45,7 @@ void printf(char * fmt, ...) {
 
 	while ((c = *fmt) != '\0') {
 		if (c != '%') {
-			putc(c);
+			putchar(c);
 			fmt++;
 			continue;
 		} else {
@@ -111,10 +111,10 @@ void printf(char * fmt, ...) {
 					break;
 				case u'c':
 					ul = (char) va_arg(*argv, uint16_t);
-					putc(ul);
+					putchar(ul);
 					break;
 				case u'%':
-					putc(u'%');
+					putchar(u'%');
 					break;
 			}
 			fmt++;

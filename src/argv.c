@@ -97,7 +97,7 @@ void safe_print(char * string, char end) {
 		return;
 	}
 	printf("%s", string);
-	putc(end);
+	putchar(end);
 }
 
 // bootiful!
@@ -119,7 +119,7 @@ void args_print_help(int argc, char * argv[], int optionc, args_option_t * optio
 		int tab_length = 22 - (option->long_name ? strlen(option->long_name) : 0); // todo: handle this a little differently (and make this stdlib function?)
 		printf((option->short_name == 0) ? "      " : "  -%c%c ", option->short_name, option->long_name ? ',' : ' ');
 		printf(option->long_name ? "--%s" : "  ", option->long_name);
-		while (tab_length-- > 0) { putc(' '); } // yeah
+		while (tab_length-- > 0) { putchar(' '); } // yeah
 		safe_print(option->help, '\0');
 		printf("\n");
 	}
@@ -251,6 +251,9 @@ int args_handle_builtins(int argc, char * argv[], int optionc, args_option_t * o
 		return 0;
 	}
 	for (char * arg = argv[1]; i < argc; arg = argv[i]) {
+		if (!arg) {
+			return 1; // HELP ?
+		}
 		int size = strlen(arg);
 		if (!args_is_valid(arg, size)) {
 			i++;
