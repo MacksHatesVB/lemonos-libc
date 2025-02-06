@@ -71,7 +71,7 @@ args_option_t * args_find(char * arg, int optionc, args_option_t * options) {
 			}
 			for (int i = 0; i < optionc; i++) {
 				args_option_t * option = &options[i];
-				if (strcmp(option->long_name, long_name) == 0) {
+				if (option->long_name && strcmp(option->long_name, long_name) == 0) {
 					return option;
 				}
 			}
@@ -155,8 +155,8 @@ void args_print_version(int argc, char * argv[]) {
 }
 
 int args_type_check(char * arg, args_option_t * option) {
-	if (option->type == TYPE_NULL) {
-		return 1;
+	if (!option->wants_argument || !arg || option->type == TYPE_NULL) {
+		return 0;
 	}
 	if (settings.allow_bad_types || ((option->flags & ARG_DISABLE_CHECKS) != 0) || option->type == TYPE_BOOL) {
 		return 0;
@@ -183,7 +183,7 @@ void args_call_callback(void * p, args_option_t * option, char * arg, void * pri
 		callback(priv, option, (option->flags & ARG_FOUND) != 0);
 		return;
 	}
-	if (!option->wants_argument) {
+	if (!option->wants_argument || option->type == TYPE_NULL || !arg) {
 		args_int_callback_t callback = (args_int_callback_t) p;
 		callback(priv, option, 0, 0);
 		return;

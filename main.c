@@ -5,7 +5,11 @@
 // our little callback
 // todo: needs priv
 void callback(void * priv, args_option_t * option, char * arg) {
-	printf("got: --%s", option->long_name);
+	if (option->long_name) {
+		printf("got: --%s", option->long_name);
+	} else {
+		printf("got: -%c", option->short_name);
+	}
 	if (arg) {
 		printf(" %s", arg);
 	} else if (option->wants_argument) {
