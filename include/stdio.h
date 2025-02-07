@@ -3,10 +3,10 @@
 #include <stdint.h>
 #include <stddef.h>
 
-int open(char * name, int flags);
-ssize_t write(int fd, const void * buf, size_t count);
-ssize_t read(int fd, void * buf, size_t count);
-int close(int fd);
+typedef int FILE; // hate this
+
+FILE * fopen(const char * pathname, const char * mode);
+int fclose(FILE * stream);
 void puts(char * text);
 void putchar(char chr);
 void printf(char * fmt, ...);
