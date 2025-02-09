@@ -248,6 +248,17 @@ float atof(char * arr) {
 }
 
 
+int strcasecmp(const char * x, const char * y) {
+	int i = 0;
+	while (x[i] != 0 && y[i] != 0) {
+		if (x[i] != y[i]) {
+			return 1;
+		}
+		i++;
+	}
+	return x[i] != 0 || y[i] != 0;
+}
+
 int strcmp(char * x, char * y) {
 	int i = 0;
 	while (x[i] != 0 && y[i] != 0) {

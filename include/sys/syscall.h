@@ -55,11 +55,4 @@ enum {
 	SYSCALL_FREE = 386,
 };
 
-enum {
-	LCTL_MULTIBOOT_MAGIC = 0,
-	LCTL_CPU_TYPE_MAGIC,
-	LCTL_CPU_VENDOR_MAGIC,
-	LCTL_PERF_STATE_MAGIC,
-};
-
 int syscall(const int number, ...);

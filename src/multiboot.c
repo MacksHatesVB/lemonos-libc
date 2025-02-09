@@ -1,7 +1,8 @@
 #include <multiboot.h>
 #include <sys/syscall.h>
 #include <stdlib.h>
+#include <lctl.h>
 
 multiboot_header_t * multiboot_get_header() {
-	return (multiboot_header_t *) (uint32_t) syscall(SYSCALL_LCTL, LCTL_MULTIBOOT_MAGIC);
+	return (multiboot_header_t *) lctl(LCTL_MULTIBOOT_MAGIC);
 }
