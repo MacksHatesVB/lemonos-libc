@@ -4,9 +4,9 @@ CC := gcc
 ASM := nasm
 ASMFLAGS := -f elf32
 # sse3 support being considered...
-CCFLAGS := -O3 -fno-stack-protector -fPIE -fPIC -fPIE -pie -fpic -msse -msse2 -mno-avx -mhard-float -static -m32 -fno-builtin -fno-builtin-function -fomit-frame-pointer -funsigned-char -falign-functions=16 -ffreestanding -nostdlib -nostartfiles -funsigned-char -Iinclude
+CCFLAGS := -O3 -fno-stack-protector -static -fpie --static-pie -msse -msse2 -mno-avx -mhard-float -m32 -fno-builtin -fno-builtin-function -fomit-frame-pointer -funsigned-char -falign-functions=16 -ffreestanding -nostdlib -nostartfiles -funsigned-char -Iinclude
 LD := ld
-LDFLAGS := -m elf_i386 --no-dynamic-linker -pie -pic
+LDFLAGS := -m elf_i386 --no-dynamic-linker -pic -pie -Tlink.ld
 MAKE := make
 AR := ar
 
@@ -38,7 +38,7 @@ build: $(OBJECTS) $(ASM_OBJECTS)
 	$(AR) cr $(OUTPUT) $^
 	chmod $(OUTPUT_PERMS) $(OUTPUT)
 	$(CC) $(CCFLAGS) $(TEST_PROGRAM) -c -o $(TEST_OUTPUT).o
-	$(LD) $(LDFLAGS) -Tlink.ld $(TEST_OUTPUT).o $(OUTPUT) -o $(TEST_OUTPUT)
+	$(LD) $(LDFLAGS) $(TEST_OUTPUT).o $(OUTPUT) -o $(TEST_OUTPUT)
 
 clean:
 	rm -rf ${BUILD_DIR} ${OUTPUT}

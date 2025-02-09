@@ -7,7 +7,9 @@
 int __is_lemonos = 1;
 
 int __attribute__((weak)) linked_main(linked_t * linked);
-int __attribute__((weak)) main(int argc, char * argv[]);
+int __attribute__((weak)) main(int argc, char * argv[]) {
+	printf("This program is not an executable.\n");
+}
 
 // now we must initialise the runtime
 int __attribute__((optimize("-O0"))) __runtime_entry(int argc, char * argv[]) {

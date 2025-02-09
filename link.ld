@@ -20,6 +20,15 @@ SECTIONS
 		.rel : {
 			*(.rel .rel.*)
 		}
+		.interp : {
+			*(.interp .interp.*)
+		}
+		.plt : {
+			*(.plt .plt.*)
+		}
+		.got : {
+			*(.got .got.*)
+		}
 		/DISCARD/ : {
 			*(.note.*)
 			*(.comment .comment.*)
