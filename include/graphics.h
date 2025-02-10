@@ -136,4 +136,5 @@ uint32_t alpha_calculate(uint32_t top, uint32_t bottom);
 void rect_2d_draw(rect_2d_t * rect2, rect_2d_t * rect);
 void rect_2d_adraw(rect_2d_t * rect2, rect_2d_t * rect);
 void rect_2d_ckdraw(rect_2d_t * rect2, rect_2d_t * rect, int thresh);
+framebuffer_spec_t * get_framebuffer_spec(framebuffer_spec_t * spec);
 window_t * create_window(uint16_t * title, uint16_t * progname, int width, int height);

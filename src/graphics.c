@@ -1,6 +1,8 @@
 #include <graphics.h>
 #include <unistd.h>
 #include <string.h>
+#include <runtime.h>
+#include <lctl.h>
 
 uint8_t degrade_step(uint8_t c, uint8_t t) {
 	if (c == t) {
@@ -48,6 +50,18 @@ int rgb_diff(uint32_t c1, uint32_t c2) {
 	db = abs32(b2 - b1);
 	dist = (dr * dr) + (dg * dg) + (db * db);
 	return dist;
+}
+
+framebuffer_spec_t * get_framebuffer_spec(framebuffer_spec_t * spec) {
+	// right so we can do this on LemonOS
+	if (!spec) {
+		return NULL;
+	}
+	if (__is_lemonos) {
+		return (framebuffer_spec_t *) lctl(LCTL_REQUEST_FRAMEBUFFER spec);
+	}
+	// how exactly do we do this on linux ?
+	return NULL; // in future we can mmap /dev/fb0 i guess (?)
 }
 
 // from gdk-pixbuf (gdk-pixbuf/pixops/pixops.c)
