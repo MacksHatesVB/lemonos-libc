@@ -67,6 +67,13 @@ typedef struct {
 	window_t * output;
 } window_spec_t;
 
+typedef struct {
+	void * fb;
+	int width;
+	int height;
+	int bpp;
+} framebuffer_spec_t;
+
 enum {
 	FONT_LEGACY,
 	FONT_BLANK,

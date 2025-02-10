@@ -10,4 +10,4 @@ enum {
 	LCTL_REQUEST_FRAMEBUFFER,
 };
 
-uint32_t lctl(int number);
+uint32_t lctl(int number, ...);
