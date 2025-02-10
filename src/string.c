@@ -304,14 +304,6 @@ void * memset(void * dest, int val, size_t length) {
 	return dest;
 }
 
-void * memset32(void * dest, uint32_t val, size_t length) {
-	register uint32_t * temp = dest;
-	while (length-- > 0) {
-		*temp++ = val;
-	}
-	return dest;
-}
-
 void * memcpy(void * dest, const void * src, size_t length) {
 	int d0, d1, d2;
 	asm volatile (

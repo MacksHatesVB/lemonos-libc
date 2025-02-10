@@ -58,7 +58,7 @@ framebuffer_spec_t * get_framebuffer_spec(framebuffer_spec_t * spec) {
 		return NULL;
 	}
 	if (__is_lemonos) {
-		return (framebuffer_spec_t *) lctl(LCTL_REQUEST_FRAMEBUFFER spec);
+		return (framebuffer_spec_t *) lctl(LCTL_REQUEST_FRAMEBUFFER, spec);
 	}
 	// how exactly do we do this on linux ?
 	return NULL; // in future we can mmap /dev/fb0 i guess (?)
