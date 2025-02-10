@@ -17,3 +17,5 @@ signed short abs16(signed short x);
 signed char abs8(signed char x);
 long double logl(long double base, long double number);
 long double pow(long double, long double);
+uint64_t memory_scale(uint64_t bytes, int divisor);
+char memory_suffix(uint64_t bytes, int divisor);

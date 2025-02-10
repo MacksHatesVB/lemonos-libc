@@ -100,6 +100,15 @@ void safe_print(char * string, char end) {
 	putchar(end);
 }
 
+void args_print_option(int tab, char * long_name, char short_name, char * help) {
+	int tab_length = tab - (long_name ? strlen(long_name) : 0); // todo: handle this a little differently (and make this stdlib function?)
+	printf((short_name == 0) ? "      " : "  -%c%c ", short_name, long_name ? ',' : ' ');
+	printf(long_name ? "--%s" : "  ", long_name);
+	while (tab_length-- > 0) { putchar(' '); } // yeah
+	safe_print(help, '\0');
+	printf("\n");
+}
+
 // bootiful!
 void args_print_help(int argc, char * argv[], int optionc, args_option_t * options) {
 	char * name = (argc >= 1) ? basename(argv[0]) : "PROGNAME"; // LemonOS for example can call us with __nothing__ in argv, so do this
@@ -116,15 +125,11 @@ void args_print_help(int argc, char * argv[], int optionc, args_option_t * optio
 		if (option->short_name == 1) {
 			continue;
 		}
-		int tab_length = 22 - (option->long_name ? strlen(option->long_name) : 0); // todo: handle this a little differently (and make this stdlib function?)
-		printf((option->short_name == 0) ? "      " : "  -%c%c ", option->short_name, option->long_name ? ',' : ' ');
-		printf(option->long_name ? "--%s" : "  ", option->long_name);
-		while (tab_length-- > 0) { putchar(' '); } // yeah
-		safe_print(option->help, '\0');
-		printf("\n");
+		args_print_option(settings.tab_length, option->long_name, option->short_name, option->help);
 	}
-	printf("  -%c, --help     display this help and exit\n", settings.help_char);
-	printf("  -%c, --version  output version information and exit\n\n", settings.version_char);
+	args_print_option(9, "help", settings.help_char, "display this help and exit");
+	args_print_option(9, "version", settings.version_char, "output version information and exit");
+	putchar('\n');
 	if (settings.license) {
 		printf("License %s\n", settings.license); // print their licesense (if they set one)
 	}
@@ -295,7 +300,7 @@ args_option_state_t * args_make_states(int optionc, args_option_t * options) {
 }
 
 int args_do_defaults(int argc, char * argv[], int optionc, args_option_t * options, int found) {
-	if (settings.default_to_help && found == 0) {
+	if ((!settings.none_required) && settings.default_to_help && found == 0) {
 		args_print_help(argc, argv, optionc, options);
 		return 1;
 	}
@@ -322,6 +327,41 @@ void args_set_positional(dynarray_t ** positionals, char * arg) {
 		return;
 	}
 	*positionals = dyna_append(*positionals, &arg, 4);
+}
+
+int args_exclusion_match(args_option_t * option, int optionc, args_option_t * options) {
+	uint32_t bits = option->flags & ARG_XOR_MASK;
+	if (bits == 0) {
+		return 0;
+	}
+	for (int i = 0; i < optionc; i++) {
+		args_option_t * op = &options[i];
+		if (op == option) {
+			continue;
+		}
+		uint32_t op_bits = op->flags & ARG_XOR_MASK;
+		if ( ((bits & op_bits) != 0) && ((op->flags & ARG_FOUND) != 0) ) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int args_mutual_exclude(int optionc, args_option_t * options, args_option_state_t * states) {
+	for (int i = optionc - 1; i > 0; i--) {
+		args_option_t * option = &options[i];
+		args_option_state_t * state = &states[i];
+		if ((option->flags & ARG_FOUND) == 0) {
+			continue;
+		}
+		if (args_exclusion_match(option, optionc, options)) {
+			if (settings.muts_cause_error) {
+				return 1;
+			}
+			option->flags ^= ARG_FOUND;
+		}
+	}
+	return 0;
 }
 
 int args_parse(int argc, char * argv[], int optionc, args_option_t * options, void * priv) {
@@ -371,6 +411,13 @@ int args_parse(int argc, char * argv[], int optionc, args_option_t * options, vo
 			state->arg = arg;
 		}
 		i = i + 1 + !!arg; // winner
+	}
+
+	/* PRE POST PASS: handle exclusions */
+	if (args_mutual_exclude(optionc, options, states)) {
+		free(states);
+		args_do_defaults(argc, argv, optionc, options, 0);
+		return 1;
 	}
 
 	/* POST PASS: call callbacks if de-duplicating, check if required arguments were not passed */
@@ -451,6 +498,10 @@ void args_set_help_character(char chr) {
 	settings.help_char = chr;
 }
 
+void args_set_tab_length(int length) {
+	settings.tab_length = length;
+}
+
 void args_setup(uint32_t flags) {
 	settings.stack_positionals = (flags & ARG_STACK_POSITIONALS) != 0;
 	settings.allow_option_arguments = (flags & ALLOW_OPTIONS_AS_ARGS) != 0;
@@ -459,9 +510,16 @@ void args_setup(uint32_t flags) {
 	settings.no_casts = (flags & ARG_NO_CASTS) != 0;
 	settings.allow_dups = (flags & ALLOW_DUPLICATES) != 0;
 	settings.silent = (flags & ARG_SILENT) != 0;
+	settings.muts_cause_error = (flags & ARG_MUTUAL_EXCLUSION_ERRORS) != 0;
+	settings.none_required = (flags & ARG_NONE_REQUIRED) != 0;
 
 	settings.help_char = 'h';
 	settings.version_char = 'V';
+	settings.tab_length = 22;
+
+	if (settings.muts_cause_error && settings.allow_dups) {
+		settings.allow_dups = 0; // "muts cause errors" implies de-duplication
+	}
 }
 
 void args_unsetup() {

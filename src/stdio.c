@@ -28,6 +28,7 @@ void printf(char * fmt, ...) {
 	unsigned long ul = 0;
 	uint64_t ull = 0;
 	int l = 0;
+	int l2 = 0;
 	double f = 0;
 	char * str;
 	char buffer[128];
@@ -44,7 +45,7 @@ void printf(char * fmt, ...) {
 		} else {
 			fmt++;
 			c = *fmt;
-			if (c == '0') {
+			if (c == '\0') {
 				break;
 			}
 			switch (c) {
@@ -90,6 +91,33 @@ void printf(char * fmt, ...) {
 				case u'u':
 					ul = (uint32_t) va_arg(*argv, unsigned long);
 					ulldtoa(ul, buffer, 10);
+					puts(buffer);
+					break;
+				case u'm':
+					ull = (uint64_t) va_arg(*argv, unsigned long);
+					ul = (uint32_t) va_arg(*argv, unsigned long);
+					ull *= ul;
+					ulldtoa(ull, buffer, 10);
+					puts(buffer);
+					break;
+				case u'p':
+					l = (int) va_arg(*argv, int);
+					str = (char *) va_arg(*argv, char *);
+					l -= strlen(str);
+					while (l-- > 0) { putchar(' '); }
+					if (!str) {
+						break;
+					}
+					puts(str);
+					break;
+				case u'P':
+					l = (int) va_arg(*argv, int);
+					ull = (uint64_t) va_arg(*argv, unsigned long);
+					ul = (uint32_t) va_arg(*argv, unsigned long);
+					ull *= ul;
+					ulldtoa(ull, buffer, 10);
+					l -= strlen(buffer);
+					while (l-- > 0) { putchar(' '); }
 					puts(buffer);
 					break;
 				case u'l':

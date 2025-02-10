@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <sys/syscall.h>
 
-// this is NOT the real definition of syscall() but it should be fine
+int sysconf(int name);
 void ipc(uint64_t pid, int cmd, void * data);
 int reboot(int op);
 

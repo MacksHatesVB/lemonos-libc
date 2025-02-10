@@ -34,6 +34,9 @@ typedef struct {
 	uint32_t default_to_help : 1;
 	uint32_t no_casts : 1;
 	uint32_t silent : 1;
+	uint32_t muts_cause_error : 1;
+	uint32_t none_required : 1;
+	int tab_length;
 	char * description; // !
 	char * copyright; // !
 	char * license; // ! License ${license}
@@ -82,13 +85,15 @@ typedef struct {
 } args_priv_t;
 
 enum {
-	ALLOW_OPTIONS_AS_ARGS = 0b00000001,
-	ALLOW_INCORRECT_TYPES = 0b00000010,
-	ALLOW_DUPLICATES      = 0b00000100,
-	ARG_NO_CASTS          = 0b00001000, // shared with args_option_t->flags
-	ARG_SILENT            = 0b00010000,
-	ARG_DEFAULT_TO_HELP   = 0b00100000,
-	ARG_STACK_POSITIONALS = 0b01000000,
+	ALLOW_OPTIONS_AS_ARGS       = 0b000000001,
+	ALLOW_INCORRECT_TYPES       = 0b000000010,
+	ALLOW_DUPLICATES            = 0b000000100,
+	ARG_NO_CASTS                = 0b000001000, // shared with args_option_t->flags
+	ARG_SILENT                  = 0b000010000,
+	ARG_DEFAULT_TO_HELP         = 0b000100000,
+	ARG_STACK_POSITIONALS       = 0b001000000,
+	ARG_MUTUAL_EXCLUSION_ERRORS = 0b010000000,
+	ARG_NONE_REQUIRED           = 0b100000000,
 };
 
 enum {
@@ -98,6 +103,10 @@ enum {
 	// ARG_NO_CASTS       = 0b00001000, // shared with args_setup()
 	ARG_ARGUMENT_REQUIRED = 0b00010000,
 	ARG_FOUND             = 0b10000000,
+};
+
+enum {
+	ARG_XOR_MASK = 0xffff0000,
 };
 
 int args_contains(int argc, char * argv[], char * argument);
@@ -115,4 +124,5 @@ void args_set_author(char * author);
 void args_set_package(char * package, char * version);
 void args_set_version_character(char chr);
 void args_set_help_character(char chr);
+void args_set_tab_length(int length);
 void args_load_spec(args_progspec_t * spec);

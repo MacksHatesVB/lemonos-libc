@@ -42,3 +42,28 @@ signed short abs16(signed short x) {
 signed char abs8(signed char x) {
 	return ((unsigned char) x & 0x7fffffff);
 }
+
+
+uint64_t memory_scale(uint64_t bytes, int divisor) {
+	if (bytes > (divisor * 1000000)) {
+		return bytes / (divisor * 1000000);
+	} else if (bytes > (divisor * 1000)) {
+		return bytes / (divisor * 1000);
+	} else if (bytes > divisor) {
+		return bytes / divisor;
+	} else {
+		return bytes;
+	}
+}
+
+char memory_suffix(uint64_t bytes, int divisor) {
+	if (bytes > (divisor * 1000000)) {
+		return 'G';
+	} else if (bytes > (divisor * 1000)) {
+		return 'M';
+	} else if (bytes > divisor) {
+		return 'K';
+	} else {
+		return 'B';
+	}
+}
