@@ -80,3 +80,25 @@ dynarray_t * dyna_append(dynarray_t * array, void * p, uint32_t block_size) {
 	array->size++;
 	return array;
 }
+
+void * dyna_step_iterator(dynarray_iterator_t * iterator) {
+	dynarray_t * array = iterator->array;
+	uint32_t offset = iterator->offset;
+	if (offset >= (array->size * array->block_size)) {
+		return NULL;
+	}
+	iterator->offset += array->block_size;
+	return array->array + offset;
+}
+
+void dyna_iterate(dynarray_t * array, void * callback) {
+	if (!callback) {
+		return;
+	}
+	dynarray_callback_t call = callback;
+	dynarray_iterator_t iterator = {array, 0};
+	void ** p = NULL;
+	while (p = dyna_step_iterator(&iterator)) {
+		call(p);
+	}
+}
