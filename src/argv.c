@@ -306,18 +306,25 @@ int args_do_defaults(int argc, char * argv[], int optionc, args_option_t * optio
 	}
 }
 
-void args_positionals_interate(dynarray_t ** positionals, void * callback, args_option_t * option, void * priv) {
+int args_positionals_dispatch(dynarray_t ** positionals, void * callback, args_option_t * option, void * priv) {
 	dynarray_t * array = *positionals;
+	if (!array) {
+		if ((option->flags & ARG_REQUIRED) != 0) {
+			return -1;
+		}
+		return 1;
+	}
 	if (!settings.stack_positionals) {
 		char * positional = (char *) array;
 		args_call_callback(callback, option, positional, priv);
-		return;
+		return 0;
 	}
 	char ** args = array->array;
 	for (int i = 0; i < array->size; i++) {
 		char * arg = args[i];
 		args_call_callback(callback, option, arg, priv);
 	}
+	return 0;
 }
 
 void args_set_positional(dynarray_t ** positionals, char * arg) {
@@ -424,6 +431,9 @@ int args_parse(int argc, char * argv[], int optionc, args_option_t * options, vo
 	for (int i = 0; i < optionc; i++) {
 		args_option_state_t * state = &states[i];
 		args_option_t * option = state->option;
+		if (option->short_name == 1) {
+			continue;
+		}
 		if ((option->flags & ARG_FOUND) == 0) {
 			if ((option->flags & ARG_REQUIRED) != 0) {
 				free(states);
@@ -443,9 +453,16 @@ int args_parse(int argc, char * argv[], int optionc, args_option_t * options, vo
 	}
 
 	args_option_t * option = args_find("-\x01", optionc, options);
-	if (option && positionals) {
-		args_positionals_interate(&positionals, option->callback, option, priv);
-		found++;
+	if (option) {
+		int ret = args_positionals_dispatch(&positionals, option->callback, option, priv);
+		if (ret == -1) {
+			free(states);
+			args_do_defaults(argc, argv, optionc, options, 0);
+			return 1;
+		}
+		if (ret == 0) {
+			found++;
+		}
 	}
 
 	free(states);

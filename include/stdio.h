@@ -6,6 +6,8 @@
 typedef int FILE; // hate this
 
 FILE * fopen(const char * pathname, const char * mode);
+size_t fread(void * ptr, size_t size, size_t nmemb, FILE * stream);
+size_t fwrite(void * ptr, size_t size, size_t nmemb, FILE * stream);
 int fclose(FILE * stream);
 void puts(char * text);
 void putchar(char chr);

@@ -6,6 +6,35 @@
 // todo: clean this shit up, accelerate with sse and avx
 // q: ¿sse and avx acceleration done for us by gcc?
 
+char * step_line(char * line) {
+	while (*line && *line != '\n') {
+		line++;
+	}
+	if (*line == '\n') {
+		line++;
+	}
+	return line;
+}
+
+int line_strlen(char * line) {
+	int i = 0;
+	while (*line && *line != '\n') {
+		i++;
+		line++;
+	}
+	return i;
+}
+
+int char_search(char chr, char * hay) {
+	while (*hay) {
+		if (*hay == chr) {
+			return 1;
+		}
+		hay++;
+	}
+	return 0;
+}
+
 int isdigit(int c) {
 	return c >= '0' && c <= '9';
 }
@@ -257,6 +286,17 @@ int strcasecmp(const char * x, const char * y) {
 		i++;
 	}
 	return x[i] != 0 || y[i] != 0;
+}
+
+int memcmp(void * x, void * y, size_t length) {
+	uint8_t * xb = x;
+	uint8_t * yb = y;
+	while (length--) {
+		if (*xb++ != *yb++) {
+			return 1;
+		}
+	}
+	return 0;
 }
 
 int strcmp(char * x, char * y) {

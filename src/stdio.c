@@ -4,8 +4,26 @@
 #include <stdio.h>
 #include <sys/syscall.h>
 
+// todo: impliment
+int mkdir(char * path, unsigned int mode) {
+	return -1;
+}
+
+// todo: impliemnt
+int rmdir(char * path) {
+	return -1;
+}
+
 FILE * fopen(const char * pathname, const char * mode) {
 	return NULL; // todo: impliment
+}
+
+size_t fread(void * ptr, size_t size, size_t nmemb, FILE * stream) {
+	return 0; // todo: impliment
+}
+
+size_t fwrite(void * ptr, size_t size, size_t nmemb, FILE * stream) {
+	return 0; // todo: impliment
 }
 
 int fclose(FILE * stream) {

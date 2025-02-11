@@ -3,6 +3,10 @@
 #include <stdint.h>
 #include <stddef.h>
 
+char * step_line(char * line);
+int line_strlen(char * line);
+int char_search(char chr, char * hay);
+
 int isdigit(int c);
 int isblank(int c);
 int isspace(int c);
@@ -16,6 +20,7 @@ char * ftoa(double f, char * buf, int precision);
 float atof(char * s);
 int strcmp(char * x, char * y);
 int strlen(const char * string);
+int memcmp(void * x, void * y, size_t length);
 char * strdup(char * string);
 int ustrlen(const uint16_t * string);
 void * memset(void * dest, int val, size_t length);

@@ -1,6 +1,7 @@
 #include <argv.h>
 #include <types.h>
 #include <stdio.h>
+#include <ini.h>
 
 // our little callback
 // todo: needs priv
@@ -40,6 +41,10 @@ void float_callback(void * priv, args_option_t * option, float arg, int has_arg)
 
 void bool_callback(void * priv, args_option_t * option, int present) {
 	printf("got: --%s %s\n", option->long_name, present ? "true" : "false");
+}
+
+void * do_nothing(void ** callback) {
+	asm("" :: "a"(callback) : "memory");
 }
 
 int main(int argc, char * argv[]) {

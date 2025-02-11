@@ -112,7 +112,7 @@ enum {
 int args_contains(int argc, char * argv[], char * argument);
 int args_contains_long(int argc, char * argv[], char * shortname, char * longname);
 int args_parse(int argc, char * argv[], int optionc, args_option_t * options, void * priv);
-void args_make_help(int argc, char * argv[], int optionc, args_option_t * options);
+void args_print_help(int argc, char * argv[], int optionc, args_option_t * options);
 void args_setup(uint32_t flags);
 void args_unsetup();
 
