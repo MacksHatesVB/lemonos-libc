@@ -5,17 +5,17 @@
 typedef void (* dynarray_callback_t)(void ** p);
 
 typedef struct {
-	dynarray_t * array;
-	uint32_t offset;
-	void * p;
-} dynarray_iterator_t;
-
-typedef struct {
 	uint32_t size;
 	uint32_t real_size;
 	uint32_t block_size;
 	void * array;
 } dynarray_t;
+
+typedef struct {
+	dynarray_t * array;
+	uint32_t offset;
+	void * p;
+} dynarray_iterator_t;
 
 dynarray_t * dyna_create(uint32_t size, uint32_t block_size);
 dynarray_t * dyna_swap(dynarray_t * array, uint32_t size, uint32_t block_size);
