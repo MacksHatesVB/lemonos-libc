@@ -25,7 +25,7 @@ uint32_t lctl(int number, ...) {
 			struct timeval tv;
 			gettimeofday(&tv, NULL);
 			timestamp = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-			return &timestamp;
+			return (uint32_t) &timestamp;
 	}
 
 	if (!__is_lemonos) {
