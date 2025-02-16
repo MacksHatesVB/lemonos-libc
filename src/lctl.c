@@ -1,6 +1,9 @@
 #include <sys/syscall.h>
+#include <sys/time.h>
 #include <stdint.h>
 #include <stdarg.h>
+#include <stddef.h>
+#include <runtime.h>
 #include <lctl.h>
 
 uint32_t lctl(int number, ...) {
@@ -13,5 +16,17 @@ uint32_t lctl(int number, ...) {
 	uint32_t esi = (uint32_t) va_arg(*argv, uint32_t);
 	uint32_t edi = (uint32_t) va_arg(*argv, uint32_t);
 	uint32_t ebp = (uint32_t) va_arg(*argv, uint32_t);
+
+	switch (number) {
+		case LCTL_TIMER_TIMESTAMP:
+			struct timeval tv;
+			gettimeofday(&tv, NULL);
+			return (tv.tv_sec / 1000) + (tv.tv_usec * 1000);
+	}
+
+	if (!__is_lemonos) {
+		return -1;
+	}
+
 	return (uint32_t) syscall(SYSCALL_LCTL, number, ecx, edx, esi, edi, ebp);
 }

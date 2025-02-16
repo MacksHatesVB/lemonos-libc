@@ -41,4 +41,4 @@ build: $(OBJECTS) $(ASM_OBJECTS)
 	$(LD) $(LDFLAGS) $(TEST_OUTPUT).o $(OUTPUT) -o $(TEST_OUTPUT)
 
 clean:
-	rm -rf ${BUILD_DIR} ${OUTPUT}
+	rm -rf ${BUILD_DIR} ${OUTPUT} $(TEST_OUTPUT).o $(TEST_OUTPUT)
