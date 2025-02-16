@@ -30,7 +30,6 @@ SECTIONS
 			*(.got .got.*)
 		}
 		/DISCARD/ : {
-			*(.note.*)
 			*(.comment .comment.*)
 		}
 	}
