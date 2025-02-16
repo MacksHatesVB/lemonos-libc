@@ -6,6 +6,9 @@
 #include <runtime.h>
 #include <lctl.h>
 
+// this is kinda stupid but :shrug:
+uint64_t timestamp = 0;
+
 uint32_t lctl(int number, ...) {
 	va_list listp;
 	va_list * argv;
@@ -21,7 +24,8 @@ uint32_t lctl(int number, ...) {
 		case LCTL_TIMER_TIMESTAMP:
 			struct timeval tv;
 			gettimeofday(&tv, NULL);
-			return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+			timestamp = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+			return timestamp;
 	}
 
 	if (!__is_lemonos) {
