@@ -21,7 +21,7 @@ uint32_t lctl(int number, ...) {
 		case LCTL_TIMER_TIMESTAMP:
 			struct timeval tv;
 			gettimeofday(&tv, NULL);
-			return (tv.tv_sec / 1000) + (tv.tv_usec * 1000);
+			return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	}
 
 	if (!__is_lemonos) {
