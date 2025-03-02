@@ -22,6 +22,7 @@ typedef struct _rect_2d {
 	size_2d_t size; // my size
 	int bpp; // my bpp (meaningless currently)
 	int updated; // has my image changed (meaningless currently)
+	int padding;
 } rect_2d_t;
 
 typedef struct {
