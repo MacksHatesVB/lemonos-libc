@@ -5,6 +5,7 @@
 #include <events.h>
 
 typedef void (* font_drawer_t)(uint32_t * fb, uint32_t chr, uint32_t colour, uint32_t position); // character drawer
+typedef void (* gfx_event_callback_t)(event_t * event, void * priv);
 typedef int (* gfx_callback_t)(); // generic callback for anything
 typedef void (* gfx_accelerator_call_t)(); // ...
 
@@ -29,6 +30,7 @@ typedef struct {
 	gfx_callback_t onclick; // notifications
 	gfx_callback_t oncontextmenu;
 	gfx_callback_t ontextupdate;
+	void * priv;
 	// misnomer
 	int x;
 	int y;
@@ -55,7 +57,8 @@ typedef struct _window {
 	gfx_callback_t onresize;
 	gfx_callback_t onmove;
 	gfx_callback_t ontextupdate;
-	input_callback_t handle_event; // event handler
+	void * priv;
+	gfx_event_callback_t handle_event; // event handler
 	taskbar_button_t * taskbar; // my taskbar icon
 } window_t;
 

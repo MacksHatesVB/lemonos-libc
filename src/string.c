@@ -156,8 +156,36 @@ long strtol(const char * str) {
 	return sign > 0 ? acc : -acc;
 }
 
+long ustrtol(const uint16_t * str) {
+	long acc = 0;
+	int sign = 1;
+
+	while (isspace(*str)) str++;
+
+	if (*str == u'+') {
+		str++;
+	} else if (*str == u'-') {
+		sign = -1;
+		str++;
+	}
+
+	while (*str && isdigit(*str)) {
+		acc = acc * 10 + (*str - u'0');
+		str++;
+	}
+
+	return sign > 0 ? acc : -acc;
+}
+
 int atoi(char * string) {
 	return strtol(string);
+}
+
+uint16_t * ustrnexti(uint16_t * string) {
+	while (isdigit(*string)) {
+		string++;
+	}
+	return string;
 }
 
 /**

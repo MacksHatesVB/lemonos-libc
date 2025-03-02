@@ -18,6 +18,10 @@ long strtol(const char* str);
 int atoi(char * string);
 char * ftoa(double f, char * buf, int precision);
 float atof(char * s);
+
+long ustrtol(const uint16_t * str);
+uint16_t * ustrnexti(uint16_t * string);
+
 int strcmp(char * x, char * y);
 int strlen(const char * string);
 int memcmp(void * x, void * y, size_t length);
