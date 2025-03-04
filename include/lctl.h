@@ -11,6 +11,7 @@ enum {
 	LCTL_TIMER_SET_FREQUENCY,
 	LCTL_TIMER_FREQUENCY,
 	LCTL_TIMER_TIMESTAMP,
+	LCTL_GET_LAYOUT,
 };
 
 uint32_t lctl(int number, ...);
