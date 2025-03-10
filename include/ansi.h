@@ -14,6 +14,7 @@ typedef struct ansi_state {
 	int idx;
 	uint32_t colour;
 	ansi_write_t write;
+	void * priv;
 } ansi_state_t;
 
 enum {

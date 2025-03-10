@@ -95,6 +95,11 @@ void ansi_set_writer(process_t * process, ansi_write_t write) {
 	state->write = write;
 }
 
+void ansi_set_priv(process_t * process, void * priv) {
+	ansi_state_t * state = process->stdout_priv;
+	state->priv = priv;
+}
+
 void ansi_constructor(process_t * process) {
 	ansi_state_t * state = malloc(sizeof(ansi_state_t));
 	state->state = ANSI_STATE_PRINTING;
