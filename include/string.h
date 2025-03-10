@@ -19,6 +19,7 @@ int atoi(char * string);
 char * ftoa(double f, char * buf, int precision);
 float atof(char * s);
 
+char * ustrtoa(uint16_t * unicode, char * ascii);
 long ustrtol(const uint16_t * str);
 uint16_t * ustrnexti(uint16_t * string);
 

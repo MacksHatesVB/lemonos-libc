@@ -188,6 +188,13 @@ uint16_t * ustrnexti(uint16_t * string) {
 	return string;
 }
 
+char * ustrtoa(uint16_t * unicode, char * ascii) {
+	while (*unicode) {
+		*ascii++ = *unicode++;
+	}
+	return ascii;
+}
+
 /**
  *  stm32tpl --  STM32 C++ Template Peripheral Library
  *  Visit https://github.com/antongus/stm32tpl for new versions
