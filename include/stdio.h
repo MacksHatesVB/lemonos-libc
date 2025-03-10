@@ -3,12 +3,23 @@
 #include <stdint.h>
 #include <stddef.h>
 
-typedef int FILE; // hate this
+typedef struct {
+	int fd;
+	size_t offset;
+} FILE;
 
-FILE * fopen(const char * pathname, const char * mode);
-size_t fread(void * ptr, size_t size, size_t nmemb, FILE * stream);
-size_t fwrite(void * ptr, size_t size, size_t nmemb, FILE * stream);
-int fclose(FILE * stream);
+enum {
+	SEEK_SET,
+	SEEK_CUR,
+	SEEK_END,
+};
+
+FILE * fopen(char * pathname, char * mode);
+size_t fread(void * ptr, size_t size, size_t nmemb, FILE * fp);
+size_t fwrite(void * ptr, size_t size, size_t nmemb, FILE * fp);
+long ftell(FILE * fp);
+int fseek(FILE * fp, long offset, int whence);
+int fclose(FILE * fp);
 void puts(char * text);
 void putchar(char chr);
 void printf(char * fmt, ...);

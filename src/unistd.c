@@ -3,6 +3,10 @@
 #include <stdint.h>
 #include <stdarg.h>
 
+size_t lseek(int fd, long offset, int whence) {
+	return syscall(SYSCALL_LSEEK, fd, offset, whence);
+}
+
 void ipc(uint64_t pid, int cmd, void * data) {
 	syscall(SYSCALL_IPC, (uint32_t) pid, 0, cmd, data);
 }

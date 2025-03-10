@@ -4,7 +4,6 @@
 #include <math.h>
 #include <events.h>
 
-typedef void (* font_drawer_t)(uint32_t * fb, uint32_t chr, uint32_t colour, uint32_t position); // character drawer
 typedef void (* gfx_event_callback_t)(event_t * event, void * priv);
 typedef int (* gfx_callback_t)(); // generic callback for anything
 typedef void (* gfx_accelerator_call_t)(); // ...
@@ -77,13 +76,6 @@ typedef struct {
 	int height;
 	int bpp;
 } framebuffer_spec_t;
-
-enum {
-	FONT_LEGACY,
-	FONT_BLANK,
-	FONT_COMBINING,
-	FONT_TRUECOLOUR = 16,
-};
 
 enum {
 	BPP_32BIT, // 32 bit colour

@@ -2,6 +2,8 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <sys/syscall.h>
 
 // todo: impliment
@@ -14,19 +16,53 @@ int rmdir(char * path) {
 	return -1;
 }
 
-FILE * fopen(const char * pathname, const char * mode) {
-	return NULL; // todo: impliment
+int mode_to_flags(char * mode) {
+	int size = strlen(mode);
+	if (size < 1) {
+		return 0;
+	}
+	int flags = 0;
+	switch (*mode++) {
+		case 'r': flags = O_RDONLY; break;
+		case 'w': flags = O_WRONLY | O_CREAT | O_TRUNC; break;
+		case 'a': flags = O_WRONLY | O_CREAT | O_APPEND; break;
+	}
+	if (size < 2) {
+		return flags;
+	}
+	if (*mode == '+') {
+		flags ^= 0b11;
+	}
+	return flags;
 }
 
-size_t fread(void * ptr, size_t size, size_t nmemb, FILE * stream) {
-	return 0; // todo: impliment
+FILE * fopen(char * pathname, char * mode) {
+	FILE * fp = malloc(sizeof(FILE));
+	fp->fd = open(pathname, mode_to_flags(mode));
+	fp->offset = 0;
+	return fp; // todo: impliment
 }
 
-size_t fwrite(void * ptr, size_t size, size_t nmemb, FILE * stream) {
-	return 0; // todo: impliment
+size_t fread(void * ptr, size_t size, size_t nmemb, FILE * fp) {
+	return read(fp->fd, ptr, size * nmemb);
 }
 
-int fclose(FILE * stream) {
+size_t fwrite(void * ptr, size_t size, size_t nmemb, FILE * fp) {
+	return write(fp->fd, ptr, size * nmemb);
+}
+
+long ftell(FILE * fp) {
+	return fp->offset;
+}
+
+int fseek(FILE * fp, long offset, int whence) {
+	fp->offset = lseek(fp->fd, offset, whence);
+	return 0;
+}
+
+int fclose(FILE * fp) {
+	close(fp->fd);
+	free(fp);
 	return -1; // tood: impliment
 }
 

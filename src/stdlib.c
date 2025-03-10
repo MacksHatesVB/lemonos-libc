@@ -35,6 +35,9 @@ void free(void * p) {
 	if (p == NULL) {
 		return;
 	}
+	if (!__is_lemonos) {
+		return;
+	}
 	syscall(SYSCALL_FREE, p);
 }
 

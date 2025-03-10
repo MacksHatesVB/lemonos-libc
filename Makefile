@@ -23,7 +23,7 @@ OUTPUT_PERMS := 664
 TEST_PROGRAM := main.c
 TEST_OUTPUT := main
 
-default: mkdir build
+default: mkdir build test
 
 mkdir:
 	mkdir -p ${BUILD_DIR}
@@ -37,6 +37,8 @@ $(BUILD_DIR)/%.o: src/%.asm
 build: $(OBJECTS) $(ASM_OBJECTS)
 	$(AR) cr $(OUTPUT) $^
 	chmod $(OUTPUT_PERMS) $(OUTPUT)
+
+test:
 	$(CC) $(CCFLAGS) $(TEST_PROGRAM) -c -o $(TEST_OUTPUT).o
 	$(LD) $(LDFLAGS) $(TEST_OUTPUT).o $(OUTPUT) -o $(TEST_OUTPUT)
 
