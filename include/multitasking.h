@@ -18,7 +18,11 @@ typedef struct {
 	void * allocations_top;
 	void * recv_event;
 	void * recv_global_event;
+	void * stdin_handler;
 	void * stdout_handler;
 	void * kill;
+	void * stdin_priv;
+	void * stdin_buffer;
+	void * stdin_size;
 	void * stdout_priv;
 } process_t;

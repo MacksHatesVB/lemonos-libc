@@ -14,6 +14,8 @@ enum {
 	LCTL_GET_LAYOUT,
 	LCTL_FONT_GET_BITMAPS,
 	LCTL_FONT_GET_SIZE,
+	LCTL_INITRD_LOAD,
+	LCTL_GET_PCB,
 };
 
 uint32_t lctl(int number, ...);
