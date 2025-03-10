@@ -192,6 +192,7 @@ char * ustrtoa(uint16_t * unicode, char * ascii) {
 	while (*unicode) {
 		*ascii++ = *unicode++;
 	}
+	*ascii = 0;
 	return ascii;
 }
 
