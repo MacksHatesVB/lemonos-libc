@@ -27,4 +27,5 @@ enum {
 
 void ansi_constructor(process_t * process);
 void ansi_set_writer(process_t * process, ansi_write_t write);
+void ansi_set_priv(process_t * process, void * priv);
 ssize_t ansi_handler(process_t * process, uint16_t * buffer, size_t size);
