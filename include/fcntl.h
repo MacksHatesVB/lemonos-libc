@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stddef.h>
+#include <stdint.h>
+
 #define O_ACCMODE         0003
 #define O_RDONLY            00
 #define O_WRONLY            01
