@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <multitasking.h>
 
 typedef struct ansi_state ansi_state_t;
 
@@ -22,3 +23,7 @@ enum {
 	ANSI_STATE_VALUE    = 0b00001000,
 	ANSI_STATE_END      = 0b00010000,
 };
+
+void ansi_constructor(process_t * process);
+void ansi_set_writer(process_t * process, ansi_write_t write);
+ssize_t ansi_handler(process_t * process, uint16_t * buffer, size_t size);

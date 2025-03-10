@@ -1,4 +1,5 @@
 #include <ansi.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -85,11 +86,21 @@ ssize_t ansi_decode(ansi_state_t * state, uint16_t * buffer, size_t size) {
 	return 0;
 }
 
+void ansi_default_writer(ansi_state_t * state, void * buffer, size_t size) {
+	write(1, buffer, size);
+}
+
+void ansi_set_writer(process_t * process, ansi_write_t write) {
+	ansi_state_t * state = process->stdout_priv;
+	state->write = write;
+}
+
 void ansi_constructor(process_t * process) {
 	ansi_state_t * state = malloc(sizeof(ansi_state_t));
 	state->state = ANSI_STATE_PRINTING;
 	state->idx = 0;
 	state->colour = 0xffffffff;
+	state->write = ansi_default_writer;
 	process->stdout_priv = state;
 }
 
