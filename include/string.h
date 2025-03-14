@@ -25,6 +25,8 @@ uint16_t * ustrnexti(uint16_t * string);
 
 int strcmp(char * x, char * y);
 int strlen(const char * string);
+uint16_t * ustrcpy(uint16_t * dest, uint16_t * src);
+char * strcpy(char * dest, char * src);
 int memcmp(void * x, void * y, size_t length);
 char * strdup(char * string);
 int ustrlen(const uint16_t * string);

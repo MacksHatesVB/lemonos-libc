@@ -113,6 +113,5 @@ ssize_t ansi_handler(process_t * process, uint16_t * buffer, size_t size) {
 	// this is an evil hack that lets us pass privs to our decoder
 	// todo: better API ?
 	ansi_state_t * state = process->stdout_priv;
-
 	ansi_decode(state, buffer, size);
 }

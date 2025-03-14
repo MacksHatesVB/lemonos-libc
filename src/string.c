@@ -354,6 +354,14 @@ int strlen(const char * string) {
 	return i;
 }
 
+uint16_t * ustrcpy(uint16_t * dest, uint16_t * src) {
+	return memcpy(dest, src, (ustrlen(src) * 2) + 2);
+}
+
+char * strcpy(char * dest, char * src) {
+	return memcpy(dest, src, strlen(src) + 1);
+}
+
 int ustrlen(const uint16_t * string) {
 	int i = 0;
 	while (*string++) {
