@@ -20,15 +20,14 @@ uint32_t lctl(int number, ...) {
 	uint32_t edi = (uint32_t) va_arg(*argv, uint32_t);
 	uint32_t ebp = (uint32_t) va_arg(*argv, uint32_t);
 
-	switch (number) {
-		case LCTL_TIMER_TIMESTAMP:
-			struct timeval tv;
-			gettimeofday(&tv, NULL);
-			timestamp = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-			return (uint32_t) &timestamp;
-	}
-
 	if (!__is_lemonos) {
+		switch (number) {
+			case LCTL_TIMER_TIMESTAMP:
+				struct timeval tv;
+				gettimeofday(&tv, NULL);
+				timestamp = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+				return (uint32_t) &timestamp;
+		}
 		return -1;
 	}
 
