@@ -107,6 +107,7 @@ enum {
 void widgets_draw_image(widgets_screen_t * screen, widgets_element_image_t * image);
 widgets_element_t * widgets_create_image(void * fb, int width, int height);
 widgets_element_t * widgets_create_text(uint16_t * string, uint32_t colour);
+widgets_element_t * widgets_create_hitbox(int width, int height);
 void widgets_register_handler(widgets_element_t * element, int type, void * handler);
 void widgets_set_origin(widgets_element_t * element, uint32_t origin);
 void widgets_position(widgets_screen_t * screen, widgets_element_t * element, int x, int y);
