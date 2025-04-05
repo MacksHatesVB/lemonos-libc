@@ -255,7 +255,7 @@ widgets_screen_t * widgets_create_screen(window_t * window) {
 	screen->font = font_load();
 	screen->window = window;
 	screen->elements = NULL;
-	screen->background = 0;
+	screen->background = 0xff000000;
 	screen->focused_element = (widgets_element_t *) screen;
 	screen->element_header.onmousedown = widgets_default_handler;
 	screen->element_header.onmouseup = widgets_default_handler;
