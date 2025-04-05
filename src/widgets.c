@@ -177,6 +177,14 @@ void widgets_position(widgets_screen_t * screen, widgets_element_t * element, in
 	widgets_push(element, x, y);
 }
 
+void widgets_set_priv(widgets_element_t * element, void * priv) {
+	element->header.priv = priv;
+}
+
+void * widgets_get_priv(widgets_element_t * element) {
+	return element->header.priv;
+}
+
 void widgets_add_element(widgets_screen_t * screen, widgets_element_t * element) {
 	screen->elements = linked_add(screen->elements, element);
 }

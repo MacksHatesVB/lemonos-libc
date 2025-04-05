@@ -32,6 +32,7 @@ typedef struct {
 	widgets_event_handler_t onmouseup;
 	widgets_event_handler_t onmousemove;
 	widgets_event_handler_t onclick;
+	void * priv;
 } widgets_element_header_t;
 
 typedef struct widgets_element {
@@ -116,3 +117,5 @@ widgets_screen_t * widgets_create_screen(window_t * window);
 void widgets_update_element(widgets_screen_t * screen, widgets_element_t * element);
 void widgets_set_background(widgets_screen_t * screen, uint32_t background);
 void widgets_update_screen(widgets_screen_t * screen);
+void widgets_set_priv(widgets_element_t * element, void * priv);
+void * widgets_get_priv(widgets_element_t * element);
