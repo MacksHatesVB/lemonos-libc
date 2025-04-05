@@ -23,4 +23,5 @@ font_t * font_make_handle(void * bitmaps, uint32_t size);
 int font_contains(font_t * font, uint16_t codepoint);
 void font_draw_line(uint32_t * character, int offset, uint32_t colour, uint32_t * fb, font_drawer_t drawer, uint32_t line);
 void font_draw(uint32_t * character, uint32_t colour, int y, int x, int width, uint32_t * fb);
+void font_draw_string(font_t * font, uint16_t * string, uint32_t colour, int x, int y, int width, uint32_t * fb);
 font_t * font_load();

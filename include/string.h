@@ -29,9 +29,16 @@ uint16_t * ustrcpy(uint16_t * dest, uint16_t * src);
 char * strcpy(char * dest, char * src);
 int memcmp(void * x, void * y, size_t length);
 char * strdup(char * string);
+uint16_t * ustrdup(uint16_t * string);
 int ustrlen(const uint16_t * string);
 void * memset(void * dest, int val, size_t length);
 void * memcpy(void * dest, const void * src, size_t length);
+void * memcpy32(void * dest, const void * src, size_t length);
+void * asm_memcpy(void * dest, const void * src, size_t length);
+
+
+void * memcpy_aligned_sse2(void * dest, const void * src, size_t length);
+void * memcpy_aligned_avx(void * dest, const void * src, size_t length);
 
 // todo: not this
 static inline uint32_t * memset32(uint32_t * dest, uint32_t val, size_t length) {
@@ -43,24 +50,4 @@ static inline uint32_t * memset32(uint32_t * dest, uint32_t val, size_t length) 
 		: "memory"
 	);
 	return temp;
-}
-
-
-static inline uint32_t * memcpy32(uint32_t * dest, uint32_t * src, size_t length) {
-	int d0, d1, d2;
-	asm volatile (
-		"rep ; movsl\n\t"
-		"testb $2,%b4\n\t"
-		"je 1f\n\t"
-		"movsw\n"
-		"1:\ttestb $1,%b4\n\t"
-		"je 2f\n\t"
-		"movsb\n"
-		"2:"
-
-		: "=&c" (d0), "=&D" (d1), "=&S" (d2)
-		: "0" (length), "q" (length*4),"1" ((long) dest),"2" ((long) src)
-		: "memory"
-	);
-	return dest;
 }

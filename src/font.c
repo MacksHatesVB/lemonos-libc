@@ -98,13 +98,23 @@ void font_draw_line(uint32_t * character, int offset, uint32_t colour, uint32_t 
 	}
 }
 
-void font_draw(uint32_t * character, uint32_t colour, int y, int x, int width, uint32_t * fb) {
+void font_draw(uint32_t * character, uint32_t colour, int x, int y, int width, uint32_t * fb) {
 	int i = 2;
 	font_drawer_t drawer = font_get_drawer(character[1]);
 	for (int j = 0; j < 16; j++) {
 		int line = x + (y++ * width);
 		font_draw_line(character, i, colour, fb, drawer, line);
 		i += 8;
+	}
+}
+
+void font_draw_string(font_t * font, uint16_t * string, uint32_t colour, int x, int y, int width, uint32_t * fb) {
+	uint16_t chr;
+	while (chr = *string) {
+		uint32_t * character = font_get(font, chr);
+		font_draw(character, colour, x, y, width, fb);
+		x += 8;
+		string++;
 	}
 }
 

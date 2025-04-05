@@ -380,6 +380,16 @@ char * strdup(char * string) {
 	return new;
 }
 
+uint16_t * ustrdup(uint16_t * string) {
+	if (!string) {
+		return NULL;
+	}
+	int size = ustrlen(string);
+	uint16_t * new = malloc((size * 2) + 2);
+	memcpy(new, string, (size * 2) + 2);
+	return new;
+}
+
 void * memset(void * dest, int val, size_t length) {
 	register uint8_t * temp = dest;
 	while (length-- > 0) {
@@ -402,6 +412,25 @@ void * memcpy(void * dest, const void * src, size_t length) {
 
 		: "=&c" (d0), "=&D" (d1), "=&S" (d2)
 		: "0" (length/4), "q" (length),"1" ((long) dest),"2" ((long) src)
+		: "memory"
+	);
+	return dest;
+}
+
+void * memcpy32(void * dest, const void * src, size_t length) {
+	int d0, d1, d2;
+	asm volatile (
+		"rep ; movsl\n\t"
+		"testb $2,%b4\n\t"
+		"je 1f\n\t"
+		"movsw\n"
+		"1:\ttestb $1,%b4\n\t"
+		"je 2f\n\t"
+		"movsb\n"
+		"2:"
+
+		: "=&c" (d0), "=&D" (d1), "=&S" (d2)
+		: "0" (length), "q" (length*4),"1" ((long) dest),"2" ((long) src)
 		: "memory"
 	);
 	return dest;

@@ -16,7 +16,8 @@ typedef struct size_2d {
 typedef struct _rect_2d {
 	int x; // position (meaningless in window_t)
 	int y;
-	vect_2d_t cursor; // cursor position
+	int cursor_x; // cursor position
+	int cursor_y;
 	uint32_t * fb; // my image
 	size_2d_t size; // my size
 	int bpp; // my bpp (meaningless currently)

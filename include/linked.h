@@ -11,6 +11,10 @@ typedef struct slinked {
 	struct slinked * next;
 } slinked_t;
 
+typedef struct {
+	linked_t * node;
+} linked_iterator_t;
+
 // generic callback
 typedef int (* linked_callback_t)(linked_t * node, void * pass);
 
@@ -18,6 +22,7 @@ linked_t * linked_leaf(linked_t * bottom); // grab the leaf node
 linked_t * linked_branch(linked_t * node); // grab the branch node
 int linked_count(linked_t * bottom); // count nodes
 linked_t * linked_add(linked_t * bottom, void * p); // create a new node and add it
+linked_t * linked_create(void * p);
 linked_t * linked_prepend(linked_t * bottom, linked_t * node); // prepend an existing node to start
 linked_t * linked_stitch(linked_t * bottom, linked_t * top); // stitch two lists together
 linked_t * linked_append(linked_t * bottom, linked_t * node); // append an existing node to end
@@ -35,6 +40,7 @@ linked_t * linked_from_array_ptr(linked_t * bottom, void * array, int size, int 
 linked_t * linked_generate(linked_t * bottom, void * generate, void * pass);
 linked_t * linked_find(linked_t * bottom, void * callback, void * pass); // search for a node
 linked_t * linked_find_back(linked_t * bottom, void * callback, void * pass); // search for a node (backwards)
+linked_t * linked_step_iterator(linked_iterator_t * iterator);
 
 // generic linked_find callback to just do (node->p == pass)
 int linked_find_generic(linked_t * node, void * pass);

@@ -131,6 +131,9 @@ linked_t * linked_remove(linked_t * bottom, int index) {
 }
 
 linked_t * linked_delete(linked_t * node) {
+	if (!node) {
+		return NULL;
+	}
 	linked_t * branch = linked_branch(node);
 	linked_t * next = branch->next;
 	if (node->back) {
@@ -328,6 +331,15 @@ linked_t * linked_find_back(linked_t * bottom, void * callback, void * pass) {
 		node = node->back;
 	}
 	return NULL;
+}
+
+linked_t * linked_step_iterator(linked_iterator_t * iterator) {
+	linked_t * node = iterator->node;
+	if (!node) {
+		return NULL;
+	}
+	iterator->node = node->next;
+	return node;
 }
 
 // generic linked_find callback
