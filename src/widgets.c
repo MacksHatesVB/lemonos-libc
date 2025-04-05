@@ -41,6 +41,15 @@ int widgets_measure_text(widgets_element_text_t * text, int dimention) {
 	}
 }
 
+int widgets_measure_hitbox(widgets_element_hitbox_t * hitbox, int dimention) {
+	switch (dimention) {
+		case WIDGETS_WIDTH:
+			return hitbox->width;
+		case WIDGETS_HEIGHT:
+			return hitbox->height;
+	}
+}
+
 widgets_element_t * widgets_create_element(int type, int size) {
 	widgets_element_t * element = malloc(size);
 	element->header.type = type;
@@ -72,6 +81,13 @@ widgets_element_t * widgets_create_text(uint16_t * string, uint32_t colour) {
 	text->string = ustrdup(string);
 	text->colour = colour;
 	return (widgets_element_t *) text;
+}
+
+widgets_element_t * widgets_create_hitbox(int width, int height) {
+	widgets_element_hitbox_t * hitbox = (widgets_element_hitbox_t *) widgets_create_element(WIDGETS_HITBOX, sizeof(widgets_element_hitbox_t));
+	hitbox->width = width;
+	hitbox->height = height;
+	return (widgets_element_t *) hitbox;
 }
 
 void widgets_register_handler(widgets_element_t * element, int type, void * handler) {
@@ -114,6 +130,8 @@ int widgets_measure_size(widgets_element_t * element, int dimention) {
 			return widgets_measure_image((widgets_element_image_t *) element, dimention);
 		case WIDGETS_TEXT:
 			return widgets_measure_text((widgets_element_text_t *) element, dimention);
+		case WIDGETS_HITBOX:
+			return widgets_measure_hitbox((widgets_element_hitbox_t *) element, dimention);
 	}
 }
 

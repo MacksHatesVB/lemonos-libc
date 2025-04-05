@@ -49,6 +49,12 @@ typedef struct {
 	uint32_t colour;
 } widgets_element_text_t;
 
+typedef struct {
+	widgets_element_header_t header;
+	int width;
+	int height;
+} widgets_element_hitbox_t;
+
 typedef struct widgets_screen {
 	widgets_element_header_t element_header;
 	window_t * window;
@@ -62,6 +68,7 @@ typedef struct widgets_screen {
 enum {
 	WIDGETS_IMAGE,
 	WIDGETS_TEXT,
+	WIDGETS_HITBOX,
 };
 
 enum {
