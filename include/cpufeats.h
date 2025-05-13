@@ -34,5 +34,8 @@ enum {
 #define MMX_MASK 0b100000000000000000000000
 #define AMD3DNOW_MASK 0b10000000000000000000000000000000
 
+void cpuid(int parameter, uint32_t * eax, uint32_t * ebx, uint32_t * ecx, uint32_t * edx);
+void cpu_get_vendor_name(void * vendor);
+void cpu_get_model_name(void * model);
 int cpu_supports(int flag);
 void __cpufeats_init();

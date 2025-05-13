@@ -14,9 +14,14 @@ enum {
 	SEEK_END,
 };
 
+extern FILE * stdin;
+extern FILE * stdout;
+extern FILE * stderr;
+
 FILE * fopen(char * pathname, char * mode);
 size_t fread(void * ptr, size_t size, size_t nmemb, FILE * fp);
 size_t fwrite(void * ptr, size_t size, size_t nmemb, FILE * fp);
+void fprintf(FILE * fp, char * fmt, ...);
 long ftell(FILE * fp);
 int fseek(FILE * fp, long offset, int whence);
 int fclose(FILE * fp);
@@ -31,3 +36,4 @@ uint8_t inb(uint16_t port);
 uint16_t inw(uint16_t port);
 long inl(uint16_t port);
 uint32_t ind(uint16_t port);
+void __stdio_init();

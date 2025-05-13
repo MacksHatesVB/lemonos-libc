@@ -6,6 +6,27 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 
+static FILE stdinfp;
+static FILE stdoutfp;
+static FILE stderrfp;
+FILE * stdin;
+FILE * stdout;
+FILE * stderr;
+
+void __stdio_init() {
+	stdin = &stdinfp;
+	stdout = &stdoutfp;
+	stderr = &stderrfp;
+
+	stdin->fd = 0;
+	stdout->fd = 1;
+	stderr->fd = 2;
+
+	stdin->offset = 0;
+	stdout->offset = 0;
+	stderr->offset = 0;
+}
+
 // todo: impliment
 int mkdir(char * path, unsigned int mode) {
 	return -1;
@@ -74,9 +95,41 @@ void putchar(char chr) {
 	syscall(SYSCALL_WRITE, 1, &chr, 1);
 }
 
-void printf(char * fmt, ...) {
-	va_list listp;
-	va_list * argv;
+void fputs(char * text, FILE * fp) {
+	syscall(SYSCALL_WRITE, fp->fd, text, strlen(text));
+}
+
+void fputc(char chr, FILE * fp) {
+	syscall(SYSCALL_WRITE, fp->fd, &chr, 1);
+}
+
+static int printf_prepass(char * fmt) {
+	char chr = 0;
+	int i = 0;
+	while (chr = *fmt++) {
+		if (chr == '%') {
+			return -1;
+		}
+		i++;
+	}
+	return i;
+}
+
+void vaprintf(va_list * argv, FILE * fp, char * fmt) {
+	/*
+	  # optimisation for formatless strings, printf("Hello World!\n") for example
+
+	 pros:
+	  - Formatless strings will no longer be needlessly broken up into tonnes of little write() calls
+	 cons:
+	  - Performance penalty if the string has formatting
+	  - Strings with formatting are still broken up
+	*/
+	int length = printf_prepass(fmt);
+	if (length != -1) { // check if the string contains a `%` character (return length or -1)
+		syscall(SYSCALL_WRITE, fp->fd, fmt, length); // fast!
+		return;
+	}
 
 	char c;
 	unsigned long ul = 0;
@@ -86,14 +139,11 @@ void printf(char * fmt, ...) {
 	double f = 0;
 	char * str;
 	char buffer[128];
-
-	va_start(listp, fmt);
-	argv = &listp;
 	memset(buffer, 0, 128);
 
 	while ((c = *fmt) != '\0') {
 		if (c != '%') {
-			putchar(c);
+			fputc(c, fp);
 			fmt++;
 			continue;
 		} else {
@@ -108,61 +158,61 @@ void printf(char * fmt, ...) {
 				case u'x':
 					ul = (uint32_t) va_arg(*argv, unsigned long);
 					ulldtoa(ul, buffer, 16);
-					puts(buffer);
+					fputs(buffer, fp);
 					break;
 				case u'b':
 					ul = (uint32_t) va_arg(*argv, unsigned long);
 					ulldtoa(ul, buffer, 2);
-					puts("0b");
-					puts(buffer);
+					fputs("0b", fp);
+					fputs(buffer, fp);
 					break;
 				case u'r':
 					ul = (uint32_t) va_arg(*argv, unsigned long);
 					ulldtoa(ul, buffer, 16);
 					ul = strlen(buffer);
 					ul = 8 - ul;
-					puts("0x");
+					fputs("0x", fp);
 					while (ul--) {
-						puts("0");
+						fputs("0", fp);
 					}
-					puts(buffer);
+					fputs(buffer, fp);
 					break;
 				case u'f':
 					f = (double) va_arg(*argv, double);
 					ftoa(f, buffer, 10);
-					puts(buffer);
+					fputs(buffer, fp);
 					break;
 				case u'd':
 					l = (int32_t) va_arg(*argv, long);
 					lldtoa(l, buffer, 10);
-					puts(buffer);
+					fputs(buffer, fp);
 					break;
 				case u'o':
 					ul = (uint32_t) va_arg(*argv, unsigned long);
 					ulldtoa(ul, buffer, 8);
-					puts(buffer);
+					fputs(buffer, fp);
 					break;
 				case u'u':
 					ul = (uint32_t) va_arg(*argv, unsigned long);
 					ulldtoa(ul, buffer, 10);
-					puts(buffer);
+					fputs(buffer, fp);
 					break;
 				case u'm':
 					ull = (uint64_t) va_arg(*argv, unsigned long);
 					ul = (uint32_t) va_arg(*argv, unsigned long);
 					ull *= ul;
 					ulldtoa(ull, buffer, 10);
-					puts(buffer);
+					fputs(buffer, fp);
 					break;
 				case u'p':
 					l = (int) va_arg(*argv, int);
 					str = (char *) va_arg(*argv, char *);
 					l -= strlen(str);
-					while (l-- > 0) { putchar(' '); }
+					while (l-- > 0) { fputc(' ', fp); }
 					if (!str) {
 						break;
 					}
-					puts(str);
+					fputs(str, fp);
 					break;
 				case u'P':
 					l = (int) va_arg(*argv, int);
@@ -171,31 +221,50 @@ void printf(char * fmt, ...) {
 					ull *= ul;
 					ulldtoa(ull, buffer, 10);
 					l -= strlen(buffer);
-					while (l-- > 0) { putchar(' '); }
-					puts(buffer);
+					while (l-- > 0) { fputc(' ', fp); }
+					fputs(buffer, fp);
 					break;
 				case u'l':
 					ull = *(uint64_t *) va_arg(*argv, uint64_t *);
 					ulldtoa(ull, buffer, 10);
-					puts(buffer);
+					fputs(buffer, fp);
 					break;
 				case u's':
 				case u'8':
 					str = (char *) va_arg(*argv, char *);
-					puts(str);
+					fputs(str, fp);
 					break;
 				case u'c':
 					ul = (char) va_arg(*argv, char);
-					putchar(ul);
+					fputc(ul, fp);
 					break;
 				case u'%':
-					putchar(u'%');
+					fputc(u'%', fp);
 					break;
 			}
 			fmt++;
 			continue;
 		}
 	}
+}
+
+void fprintf(FILE * fp, char * fmt, ...) {
+	va_list listp;
+	va_list * argv;
+
+	va_start(listp, fmt);
+	argv = &listp;
+	vaprintf(argv, fp, fmt);
+	va_end(listp);
+}
+
+void printf(char * fmt, ...) {
+	va_list listp;
+	va_list * argv;
+
+	va_start(listp, fmt);
+	argv = &listp;
+	vaprintf(argv, stdout, fmt);
 	va_end(listp);
 }
 

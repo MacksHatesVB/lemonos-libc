@@ -3,7 +3,7 @@
 
 // our isdigit() that also accepts `.eE`
 int _my_isdigit(char chr) {
-	return isdigit(chr) || chr == '.' || chr == 'E' || chr == 'e';
+	return isdigit(chr) || chr == '.' || chr == 'E' || chr == 'e' || chr == 'O' || chr == 'o' || chr == 'X' || chr == 'x' || chr == 'B' || chr == 'b' || chr == 'h' || chr == 'H' || chr == '#' || (chr >= 'a' && chr <= 'f') || (chr >= 'A' && chr <= 'F');
 }
 
 // todo: get rid of this

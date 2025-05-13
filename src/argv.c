@@ -210,7 +210,7 @@ void args_call_callback(void * p, args_option_t * option, char * arg, void * pri
 				callback(priv, option, 0, 0);
 				break;
 			}
-			callback(priv, option, atoi(arg), 1);
+			callback(priv, option, strtolhauto(arg), 1);
 			break;
 		}
 		case TYPE_FLOAT: {
@@ -304,6 +304,7 @@ int args_do_defaults(int argc, char * argv[], int optionc, args_option_t * optio
 		args_print_help(argc, argv, optionc, options);
 		return 1;
 	}
+	return 0;
 }
 
 int args_positionals_dispatch(dynarray_t ** positionals, void * callback, args_option_t * option, void * priv) {
@@ -466,7 +467,9 @@ int args_parse(int argc, char * argv[], int optionc, args_option_t * options, vo
 	}
 
 	free(states);
-	args_do_defaults(argc, argv, optionc, options, found);
+	if (args_do_defaults(argc, argv, optionc, options, found)) {
+		return 1;
+	}
 	return 0;
 }
 

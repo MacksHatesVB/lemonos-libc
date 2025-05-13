@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <fcntl.h>
 #include <sys/syscall.h>
 
 size_t lseek(int fd, long offset, int whence);

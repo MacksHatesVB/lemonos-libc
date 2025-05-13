@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <runtime.h>
+#include <stdio.h>
 #include <lctl.h>
 
 uint8_t degrade_step(uint8_t c, uint8_t t) {
@@ -53,11 +54,10 @@ int rgb_diff(uint32_t c1, uint32_t c2) {
 }
 
 framebuffer_spec_t * get_framebuffer_spec(framebuffer_spec_t * spec) {
-	// right so we can do this on LemonOS
 	if (!spec) {
 		return NULL;
 	}
-	if (__is_lemonos) {
+	if (__is_lemonos) { // lol
 		return (framebuffer_spec_t *) lctl(LCTL_REQUEST_FRAMEBUFFER, spec);
 	}
 	// how exactly do we do this on linux ?
@@ -196,6 +196,19 @@ void rect_2d_ckdraw(rect_2d_t * rect2, rect_2d_t * rect, int thresh) {
 		}
 	}
 	return;
+}
+
+void rect_2d_scale(rect_2d_t * rect2, rect_2d_t * rect) {
+	// rect2 == out | rect == in
+	for (int y = 0; y < rect2->size.height; y++) {
+		float yf = (float) y / rect2->size.height;
+		int ys = yf * rect->size.height;
+		for (int x = 0; x < rect2->size.width; x++) {
+			float xf = (float) x / rect2->size.width;
+			int xs = xf * rect->size.width;
+			rect2->fb[(y * rect2->size.width) + x] = rect->fb[(ys * rect->size.width) + xs];
+		}
+	}
 }
 
 window_t * create_window(uint16_t * title, uint16_t * progname, int width, int height) {

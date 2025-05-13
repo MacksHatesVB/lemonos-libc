@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdint.h>
 #include <cpufeats.h>
 
@@ -12,7 +13,7 @@ static int sse_level = -1;
 static int avx_level = -1;
 static int fpu_level = -1;
 
-static void cpuid(int parameter, uint32_t * eax, uint32_t * ebx, uint32_t * ecx, uint32_t * edx) {
+void cpuid(int parameter, uint32_t * eax, uint32_t * ebx, uint32_t * ecx, uint32_t * edx) {
 	asm volatile("cpuid"
 
 		: "=a"(*eax), "=b"(*ebx), "=c"(*ecx), "=d"(*edx)
@@ -40,6 +41,27 @@ static int simd_check_cpuid(int page, uint32_t mask, uint32_t bits, int level, i
 	if ((flag & mask) == bits) {
 		*out = level;
 	}
+}
+
+void cpu_get_vendor_name(void * vendor) {
+	uint32_t eax;
+	cpuid(0, &eax, vendor, vendor + 8, vendor + 4);
+	((char *) vendor)[13] = 0;
+}
+
+void cpu_get_model_name(void * model) {
+	uint32_t eax, trash;
+	cpuid(0x80000000, &eax, &trash, &trash, &trash);
+	if (eax > 0x80000004) {
+		eax = 0x80000004;
+	}
+	for (int i = 0x80000002; i <= eax; i++) {
+		cpuid(i, model, model + 4, model + 8, model + 12);
+		((char *) model)[16] = 0;
+		model += 16;
+	}
+	int len = (eax - 0x80000001) * 16;
+	((char *) model)[len] = 0;
 }
 
 int cpu_supports(int flag) {
