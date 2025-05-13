@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <string.h>
 
 char * getenv(const char * name) {
 	return NULL;
@@ -22,13 +23,24 @@ void * brk(uintptr_t _break) {
 void * malloc(uint32_t size) {
 	if (!__is_lemonos) {
 		void * p = brk(0);
-		void * newbrk = brk(((uintptr_t) p) + size);
+		void * newbrk = brk(((uintptr_t) p) + size + 4);
 		if (newbrk == (void *) -1) {
 			return NULL;
 		}
-		return p;
+		*((uint32_t *) p) = size;
+		return p + 4;
 	}
 	return (void *) (uint32_t) syscall(SYSCALL_MALLOC, size);
+}
+
+void * realloc(void * ptr, size_t size) {
+	uint32_t * p = ptr - 4;
+	if (*p > size) {
+		return ptr;
+	}
+	void * new = malloc(size);
+	memcpy(new, ptr, *p);
+	return new;
 }
 
 void exit(int code) {

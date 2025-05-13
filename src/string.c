@@ -448,6 +448,21 @@ int strcmp(char * x, char * y) {
 	return x[i] != 0 || y[i] != 0;
 }
 
+int strncmp(char * x, char * y, size_t n) {
+	int i = 0;
+	while (x[i] != 0 && y[i] != 0 && n != 0) {
+		if (x[i] != y[i]) {
+			return 1;
+		}
+		i++;
+		n--;
+	}
+	if (n == 0) {
+		return 0;
+	}
+	return x[i] != 0 || y[i] != 0;
+}
+
 int strlen(const char * string) {
 	int i = 0;
 	while (*string++) {
@@ -462,6 +477,16 @@ uint16_t * ustrcpy(uint16_t * dest, uint16_t * src) {
 
 char * strcpy(char * dest, char * src) {
 	return memcpy(dest, src, strlen(src) + 1);
+}
+
+char * strncpy(char * dest, char * src, size_t n) {
+	int len = strlen(src);
+	if (len < n) {
+		return memcpy(dest, src, len + 1);
+	}
+	memcpy(dest, src, n);
+	dest[n - 1] = 0;
+	return dest;
 }
 
 int ustrlen(const uint16_t * string) {
