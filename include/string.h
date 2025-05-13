@@ -27,6 +27,7 @@ uint16_t * ustrnexti(uint16_t * string);
 
 int strcmp(char * x, char * y);
 int strcasecmp(char * x, char * y);
+int strncasecmp(char * x, char * y, size_t n);
 int strncmp(char * x, char * y, size_t n);
 int strlen(const char * string);
 uint16_t * ustrcpy(uint16_t * dest, uint16_t * src);
