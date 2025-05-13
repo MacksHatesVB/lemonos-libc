@@ -7,4 +7,7 @@ int main(int argc, char * argv[]) {
 	printf("CPU Vendor: %s\n", buffer);
 	cpu_get_model_name(buffer);
 	printf("CPU Model: %s\n", buffer);
+
+	sprintf(buffer, "hi %r hi\n", buffer);
+	puts(buffer);
 }

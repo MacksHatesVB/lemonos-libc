@@ -87,6 +87,8 @@ int fclose(FILE * fp) {
 	return -1; // tood: impliment
 }
 
+int fflush(FILE * fp) {} // lol
+
 void puts(char * text) {
 	syscall(SYSCALL_WRITE, 1, text, strlen(text));
 }
@@ -115,7 +117,7 @@ static int printf_prepass(char * fmt) {
 	return i;
 }
 
-void vaprintf(va_list * argv, FILE * fp, char * fmt) {
+void vaprintf(void * pass, va_list * argv, FILE * fp, vaprintf_puts_t puts, vaprintf_putc_t putc, char * fmt) {
 	/*
 	  # optimisation for formatless strings, printf("Hello World!\n") for example
 
@@ -127,7 +129,7 @@ void vaprintf(va_list * argv, FILE * fp, char * fmt) {
 	*/
 	int length = printf_prepass(fmt);
 	if (length != -1) { // check if the string contains a `%` character (return length or -1)
-		syscall(SYSCALL_WRITE, fp->fd, fmt, length); // fast!
+		puts(fmt, fp, pass);
 		return;
 	}
 
@@ -143,7 +145,7 @@ void vaprintf(va_list * argv, FILE * fp, char * fmt) {
 
 	while ((c = *fmt) != '\0') {
 		if (c != '%') {
-			fputc(c, fp);
+			putc(c, fp, pass);
 			fmt++;
 			continue;
 		} else {
@@ -158,61 +160,61 @@ void vaprintf(va_list * argv, FILE * fp, char * fmt) {
 				case u'x':
 					ul = (uint32_t) va_arg(*argv, unsigned long);
 					ulldtoa(ul, buffer, 16);
-					fputs(buffer, fp);
+					puts(buffer, fp, pass);
 					break;
 				case u'b':
 					ul = (uint32_t) va_arg(*argv, unsigned long);
 					ulldtoa(ul, buffer, 2);
-					fputs("0b", fp);
-					fputs(buffer, fp);
+					puts("0b", fp, pass);
+					puts(buffer, fp, pass);
 					break;
 				case u'r':
 					ul = (uint32_t) va_arg(*argv, unsigned long);
 					ulldtoa(ul, buffer, 16);
 					ul = strlen(buffer);
 					ul = 8 - ul;
-					fputs("0x", fp);
+					puts("0x", fp, pass);
 					while (ul--) {
-						fputs("0", fp);
+						puts("0", fp, pass);
 					}
-					fputs(buffer, fp);
+					puts(buffer, fp, pass);
 					break;
 				case u'f':
 					f = (double) va_arg(*argv, double);
 					ftoa(f, buffer, 10);
-					fputs(buffer, fp);
+					puts(buffer, fp, pass);
 					break;
 				case u'd':
 					l = (int32_t) va_arg(*argv, long);
 					lldtoa(l, buffer, 10);
-					fputs(buffer, fp);
+					puts(buffer, fp, pass);
 					break;
 				case u'o':
 					ul = (uint32_t) va_arg(*argv, unsigned long);
 					ulldtoa(ul, buffer, 8);
-					fputs(buffer, fp);
+					puts(buffer, fp, pass);
 					break;
 				case u'u':
 					ul = (uint32_t) va_arg(*argv, unsigned long);
 					ulldtoa(ul, buffer, 10);
-					fputs(buffer, fp);
+					puts(buffer, fp, pass);
 					break;
 				case u'm':
 					ull = (uint64_t) va_arg(*argv, unsigned long);
 					ul = (uint32_t) va_arg(*argv, unsigned long);
 					ull *= ul;
 					ulldtoa(ull, buffer, 10);
-					fputs(buffer, fp);
+					puts(buffer, fp, pass);
 					break;
 				case u'p':
 					l = (int) va_arg(*argv, int);
 					str = (char *) va_arg(*argv, char *);
 					l -= strlen(str);
-					while (l-- > 0) { fputc(' ', fp); }
+					while (l-- > 0) { putc(' ', fp, pass); }
 					if (!str) {
 						break;
 					}
-					fputs(str, fp);
+					puts(str, fp, pass);
 					break;
 				case u'P':
 					l = (int) va_arg(*argv, int);
@@ -221,25 +223,25 @@ void vaprintf(va_list * argv, FILE * fp, char * fmt) {
 					ull *= ul;
 					ulldtoa(ull, buffer, 10);
 					l -= strlen(buffer);
-					while (l-- > 0) { fputc(' ', fp); }
-					fputs(buffer, fp);
+					while (l-- > 0) { putc(' ', fp, pass); }
+					puts(buffer, fp, pass);
 					break;
 				case u'l':
 					ull = *(uint64_t *) va_arg(*argv, uint64_t *);
 					ulldtoa(ull, buffer, 10);
-					fputs(buffer, fp);
+					puts(buffer, fp, pass);
 					break;
 				case u's':
 				case u'8':
 					str = (char *) va_arg(*argv, char *);
-					fputs(str, fp);
+					puts(str, fp, pass);
 					break;
 				case u'c':
 					ul = (char) va_arg(*argv, char);
-					fputc(ul, fp);
+					putc(ul, fp, pass);
 					break;
 				case u'%':
-					fputc(u'%', fp);
+					putc(u'%', fp, pass);
 					break;
 			}
 			fmt++;
@@ -248,13 +250,51 @@ void vaprintf(va_list * argv, FILE * fp, char * fmt) {
 	}
 }
 
+void vaprintf_stream_puts(char * string, FILE * fp, void * pass) {
+	fputs(string, fp);
+}
+
+void vaprintf_stream_putc(char c, FILE * fp, void * pass) {
+	fputc(c, fp);
+}
+
+void vaprintf_buffer_puts(char * string, FILE * fp, void * pass) {
+	char ** output = pass;
+	strcpy(*output, string);
+	*output += strlen(string);
+	**output = 0;
+}
+
+void vaprintf_buffer_putc(char c, FILE * fp, void * pass) {
+	char ** outputp = pass;
+	char * output = *outputp;
+	output[0] = c;
+	output[1] = 0;
+	*outputp += 1;
+}
+
+int sprintf(char * output, char * fmt, ...) {
+	va_list listp;
+	va_list * argv;
+
+	va_start(listp, fmt);
+	argv = &listp;
+	vaprintf(&output, argv, stdout, vaprintf_buffer_puts, vaprintf_buffer_putc, fmt);
+	va_end(listp);
+}
+
+int vfprintf(FILE * fp, char * fmt, va_list ap) {
+	va_list * argv = &ap;
+	vaprintf(NULL, argv, fp, vaprintf_stream_puts, vaprintf_stream_putc, fmt);
+}
+
 void fprintf(FILE * fp, char * fmt, ...) {
 	va_list listp;
 	va_list * argv;
 
 	va_start(listp, fmt);
 	argv = &listp;
-	vaprintf(argv, fp, fmt);
+	vaprintf(NULL, argv, fp, vaprintf_stream_puts, vaprintf_stream_putc, fmt);
 	va_end(listp);
 }
 
@@ -264,7 +304,7 @@ void printf(char * fmt, ...) {
 
 	va_start(listp, fmt);
 	argv = &listp;
-	vaprintf(argv, stdout, fmt);
+	vaprintf(NULL, argv, stdout, vaprintf_stream_puts, vaprintf_stream_putc, fmt);
 	va_end(listp);
 }
 

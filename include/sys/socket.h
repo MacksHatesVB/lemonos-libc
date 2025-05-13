@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stdint.h>
+#include <arpa/inet.h>
+
 typedef struct {
 	uint32_t s_addr;
 } sockaddr_address_t;
