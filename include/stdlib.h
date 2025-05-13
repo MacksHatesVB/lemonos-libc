@@ -2,7 +2,9 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <math.h>
 
+char * getenv(const char * name);
 int cpu_get_temp();
 void exit(int status);
 int syscall(const int number, ...);

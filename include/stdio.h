@@ -25,6 +25,8 @@ extern FILE * stderr;
 FILE * fopen(char * pathname, char * mode);
 size_t fread(void * ptr, size_t size, size_t nmemb, FILE * fp);
 size_t fwrite(void * ptr, size_t size, size_t nmemb, FILE * fp);
+int getchar();
+int fflush(FILE * fp);
 int sprintf(char * output, char * fmt, ...);
 void fprintf(FILE * fp, char * fmt, ...);
 int vfprintf(FILE * fp, char * fmt, va_list ap);

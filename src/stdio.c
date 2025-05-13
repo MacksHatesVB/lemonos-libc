@@ -89,6 +89,10 @@ int fclose(FILE * fp) {
 
 int fflush(FILE * fp) {} // lol
 
+int getchar() {
+	return '\n';
+}
+
 void puts(char * text) {
 	syscall(SYSCALL_WRITE, 1, text, strlen(text));
 }

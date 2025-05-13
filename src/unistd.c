@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include <stdarg.h>
 
+int access(char * pathname, int mode) {
+}
+
 size_t lseek(int fd, long offset, int whence) {
 	return syscall(SYSCALL_LSEEK, fd, offset, whence);
 }
@@ -18,3 +21,5 @@ int reboot(int op) {
 int fork() {
 	return syscall(SYSCALL_FORK);
 }
+
+int usleep(uint32_t usec) {}

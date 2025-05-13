@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+char * getenv(const char * name) {
+	return NULL;
+}
+
 int cpu_get_temp() {
 	if (!__is_lemonos) {
 		return 0;
