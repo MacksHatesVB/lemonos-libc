@@ -3,7 +3,8 @@
 #include <stdint.h>
 #include <stdarg.h>
 
-int access(char * pathname, int mode) {
+int access(char * name, int mode) {
+	return syscall(SYSCALL_ACCESS, name, mode);
 }
 
 size_t lseek(int fd, long offset, int whence) {
