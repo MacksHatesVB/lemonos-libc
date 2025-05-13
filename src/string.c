@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <ctype.h>
 
 // todo: clean this shit up, accelerate with sse and avx
 // q: ¿sse and avx acceleration done for us by gcc?
@@ -415,17 +416,6 @@ float atof(char * arr) {
 }
 
 
-int strcasecmp(const char * x, const char * y) {
-	int i = 0;
-	while (x[i] != 0 && y[i] != 0) {
-		if (x[i] != y[i]) {
-			return 1;
-		}
-		i++;
-	}
-	return x[i] != 0 || y[i] != 0;
-}
-
 int memcmp(void * x, void * y, size_t length) {
 	uint8_t * xb = x;
 	uint8_t * yb = y;
@@ -444,6 +434,32 @@ int strcmp(char * x, char * y) {
 			return 1;
 		}
 		i++;
+	}
+	return x[i] != 0 || y[i] != 0;
+}
+
+int strcasecmp(char * x, char * y) {
+	int i = 0;
+	while (x[i] != 0 && y[i] != 0) {
+		if (tolower(x[i]) != tolower(y[i])) {
+			return 1;
+		}
+		i++;
+	}
+	return x[i] != 0 || y[i] != 0;
+}
+
+int strncasecmp(char * x, char * y, size_t n) {
+	int i = 0;
+	while (x[i] != 0 && y[i] != 0 && n != 0) {
+		if (tolower(x[i]) != tolower(y[i])) {
+			return 1;
+		}
+		i++;
+		n--;
+	}
+	if (n == 0) {
+		return 0;
 	}
 	return x[i] != 0 || y[i] != 0;
 }
