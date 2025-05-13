@@ -19,6 +19,11 @@
 #define O_ASYNC         020000
 #define __O_LARGEFILE  0100000
 
+#define R_OK 		4
+#define W_OK 		2
+#define X_OK 		1
+#define F_OK 		0
+
 //int open(char * name, int flags);
 int open(char * name, int flags, ...);
 ssize_t write(int fd, const void * buf, size_t count);
