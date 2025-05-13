@@ -37,50 +37,6 @@ int char_search(char chr, char * hay) {
 	return 0;
 }
 
-int isdigit(int c) {
-	return c >= '0' && c <= '9';
-}
-
-int isupper(int c) {
-	return c >= 'A' && c <= 'Z';
-}
-
-int islower(int c) {
-	return c >= 'a' && c <= 'z';
-}
-
-int isblank(int c) {
-	return c == ' ' || c == '\t';
-}
-
-int isspace(int c) {
-	return isblank(c) || c == '\f' || c == '\n' || c == '\r' || c == '\v';
-}
-
-int toupper(int c) {
-	return islower(c) ? (c + ('A' - 'a')) : c;
-}
-
-int tolower(int c) {
-	return isupper(c) ? (c + ('A' - 'a')) : c;
-}
-
-int isgraph(int c) {
-	return c > ' ' && c <= '~';
-}
-
-int isprint(int c) {
-	return isgraph(c) || c == ' ';
-}
-
-int isalpha(int c) {
-	return isupper(c) || islower(c);
-}
-
-int isalnum(int c) {
-	return isalpha(c) || isdigit(c);
-}
-
 void ulldtoustr(uint64_t val, uint16_t * buf, int base) {
 	static uint16_t rbuf[64];
 	uint16_t * ptr = rbuf;
