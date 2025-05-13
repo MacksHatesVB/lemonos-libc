@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <sys/syscall.h>
 
-int open(char * name, int flags, ...) {
+int open(const char * name, int flags, ...) {
 	return syscall(SYSCALL_OPEN, name, flags);
 }
 

@@ -43,6 +43,7 @@ enum {
 	SYSCALL_GETPPID, // get parent process id
 	SYSCALL_REBOOT, // reboot
 	SYSCALL_GETTIMEOFDAY = 78,
+	SYSCALL_STAT = 106,
 	SYSCALL_SYSINFO = 116,
 	SYSCALL_IPC, // ipc
 	SYSCALL_UNAME = 122, // ipc
