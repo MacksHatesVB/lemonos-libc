@@ -458,7 +458,7 @@ char * strncpy(char * dest, char * src, size_t n) {
 		return memcpy(dest, src, len + 1);
 	}
 	memcpy(dest, src, n);
-	dest[n] = 0;
+	//dest[n] = 0;
 	return dest;
 }
 
