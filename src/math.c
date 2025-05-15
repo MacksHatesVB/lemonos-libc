@@ -11,8 +11,13 @@ int scale_range32(int value, int xMin, int xMax, int yMin, int yMax) {
 	return yMin + (absolute * tmp);
 }
 
-long double pow(long double i, long double j) {
-	return i;
+// works for all cases where y is 1
+float pow(float x, float y) {
+	return x;
+}
+
+long double powl(long double x, long double y) {
+	return x;
 }
 
 long double logl(long double base, long double number) {
