@@ -34,6 +34,10 @@ void * malloc(uint32_t size) {
 }
 
 void * realloc(void * ptr, size_t size) {
+	if (!ptr) {
+		return malloc(size);
+	}
+
 	uint32_t * p = ptr - 4;
 	if (*p > size) {
 		return ptr;
