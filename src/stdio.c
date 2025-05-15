@@ -77,6 +77,7 @@ size_t fwrite(void * ptr, size_t size, size_t nmemb, FILE * fp) {
 }
 
 long ftell(FILE * fp) {
+	fp->offset = lseek(fp->fd, 0, SEEK_CUR);
 	return fp->offset;
 }
 
