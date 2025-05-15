@@ -212,6 +212,9 @@ void rect_2d_scale(rect_2d_t * rect2, rect_2d_t * rect) {
 }
 
 window_t * create_window(uint16_t * title, uint16_t * progname, int width, int height) {
+	if (!__is_lemonos) {
+		return NULL;
+	}
 	volatile window_spec_t windowspec;
 	windowspec.title = title;
 	windowspec.taskbar_text = progname;
