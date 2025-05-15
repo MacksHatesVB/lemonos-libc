@@ -9,7 +9,7 @@ int access(char * name, int mode) {
 
 size_t lseek(int fd, long offset, int whence) {
 	uint32_t result = 0;
-	syscall(SYSCALL_LSEEK, fd, 0, offset, &result, whence)
+	syscall(SYSCALL_LSEEK, fd, 0, offset, &result, whence);
 	return result;
 }
 
