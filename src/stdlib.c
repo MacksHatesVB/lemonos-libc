@@ -40,6 +40,7 @@ void * realloc(void * ptr, size_t size) {
 
 	uint32_t * p = ptr - 4;
 	if (*p > size) {
+		*p = size;
 		return ptr;
 	}
 	void * new = malloc(size);
