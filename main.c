@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include <cpufeats.h>
 
 int main(int argc, char * argv[]) {
@@ -11,4 +12,10 @@ int main(int argc, char * argv[]) {
 
 	strncpy(buffer, "hello world", 4);
 	puts(buffer);
+
+	FILE * fp = fopen("README.md", "r");
+	lseek(fp->fd, 1, SEEK_SET);
+	fread(buffer, 4, 1, fp);
+	printf("\n%s %r\n", buffer, ftell(fp));
+	fclose(fp);
 }

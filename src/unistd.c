@@ -8,7 +8,8 @@ int access(char * name, int mode) {
 }
 
 size_t lseek(int fd, long offset, int whence) {
-	return syscall(SYSCALL_LSEEK, fd, offset, whence);
+	uint32_t result = 0;
+	return syscall(SYSCALL_LSEEK, fd, 0, offset, &result, whence);
 }
 
 void ipc(uint64_t pid, int cmd, void * data) {
