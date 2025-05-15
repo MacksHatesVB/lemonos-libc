@@ -453,6 +453,7 @@ char * strcpy(char * dest, char * src) {
 
 char * strncpy(char * dest, char * src, size_t n) {
 	int len = strlen(src);
+	memset(dest, 0, n); // throw away performance to fit standard
 	if (len <= n) {
 		return memcpy(dest, src, len + 1);
 	}
