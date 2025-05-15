@@ -453,11 +453,11 @@ char * strcpy(char * dest, char * src) {
 
 char * strncpy(char * dest, char * src, size_t n) {
 	int len = strlen(src);
-	if (len < n) {
+	if (len <= n) {
 		return memcpy(dest, src, len + 1);
 	}
 	memcpy(dest, src, n);
-	dest[n - 1] = 0;
+	dest[n] = 0;
 	return dest;
 }
 

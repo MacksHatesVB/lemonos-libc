@@ -65,11 +65,15 @@ FILE * fopen(char * pathname, char * mode) {
 }
 
 size_t fread(void * ptr, size_t size, size_t nmemb, FILE * fp) {
-	return read(fp->fd, ptr, size * nmemb);
+	size_t ret = read(fp->fd, ptr, size * nmemb);
+	fp->offset += ret;
+	return ret;
 }
 
 size_t fwrite(void * ptr, size_t size, size_t nmemb, FILE * fp) {
-	return write(fp->fd, ptr, size * nmemb);
+	size_t ret = write(fp->fd, ptr, size * nmemb);
+	fp->offset += ret;
+	return ret;
 }
 
 long ftell(FILE * fp) {

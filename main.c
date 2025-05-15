@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <cpufeats.h>
 
 int main(int argc, char * argv[]) {
@@ -8,6 +9,6 @@ int main(int argc, char * argv[]) {
 	cpu_get_model_name(buffer);
 	printf("CPU Model: %s\n", buffer);
 
-	sprintf(buffer, "hi %r hi\n", buffer);
+	strncpy(buffer, "hello world", 4);
 	puts(buffer);
 }
