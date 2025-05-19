@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <personality.h>
 
 typedef struct {
 	uint16_t * name;
@@ -21,6 +22,9 @@ typedef struct {
 	void * stdin_handler;
 	void * stdout_handler;
 	void * kill;
+	void * fds;
+	personality_t * personality;
+	int fds_top;
 	void * stdin_priv;
 	void * stdin_buffer;
 	void * stdin_size;
