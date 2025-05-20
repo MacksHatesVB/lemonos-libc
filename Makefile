@@ -6,7 +6,7 @@ ASMFLAGS := -f elf32
 SSEFLAGS := -msse -mno-avx
 SSE2FLAGS := -msse -msse2 -mno-avx
 SSE4FLAGS := -msse -msse2 -msse4 -mno-avx
-AVXFLAGS := -msse -msse2 -mavx
+AVXFLAGS := -msse -msse2 -msse4 -mavx
 FPUFLAGS := -no-sse -mno-avx
 CCFLAGS := -m32 -Ofast -fno-stack-protector -D __LEMONOS__ -static -fpie --static-pie -mhard-float -fomit-frame-pointer -funsigned-char -falign-functions=16 -ffreestanding -nostdlib -nostartfiles -funsigned-char -Iinclude
 LD := ld
@@ -46,7 +46,7 @@ mkdir:
 	mkdir -p ${BUILD_DIR} ${BUILD_DIR}_sse ${BUILD_DIR}_sse2 ${BUILD_DIR}_sse4 ${BUILD_DIR}_avx
 
 $(BUILD_DIR)/%.o: src/%.c
-	$(CC) $(CCFLAGS) $^ -c -o $@
+	$(CC) $(FPUFLAGS) $(CCFLAGS) $^ -c -o $@
 $(BUILD_DIR)/%.o: src/%.asm
 	$(ASM) $(ASMFLAGS) $^ -o $@
 
