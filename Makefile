@@ -7,7 +7,7 @@ SSEFLAGS := -msse -mno-avx
 SSE2FLAGS := -msse -msse2 -mno-avx
 SSE4FLAGS := -msse -msse2 -msse4 -mno-avx
 AVXFLAGS := -msse -msse2 -msse4 -mavx
-FPUFLAGS := -no-sse -mno-avx
+FPUFLAGS := -mno-sse -mno-avx
 CCFLAGS := -m32 -Ofast -fno-stack-protector -D __LEMONOS__ -static -fpie --static-pie -mhard-float -fomit-frame-pointer -funsigned-char -falign-functions=16 -ffreestanding -nostdlib -nostartfiles -funsigned-char -Iinclude
 LD := ld
 LDFLAGS := -m elf_i386 --no-dynamic-linker -pic -pie -Tlink.ld
