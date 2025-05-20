@@ -10,6 +10,14 @@
 main
 build/
 build/*
+build_sse/
+build_sse/*
+build_sse2/
+build_sse2/*
+build_sse4/
+build_sse4/*
+build_avx/
+build_avx/*
 .vscode/*
 .vscode/
 *.vsix
