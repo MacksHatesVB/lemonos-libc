@@ -27,3 +27,11 @@ ssize_t sendto(int sockfd, const void * buf, size_t len, int flags, const struct
 ssize_t recvfrom(int sockfd, void * buf, size_t len, int flags, struct sockaddr * src_addr, socklen_t * addrlen) {
 	return syscall(SYSCALL_RECVFROM, sockfd, buf, len, flags, src_addr, addrlen);
 }
+
+int getsockopt(int sockfd, int level, int name, void * value, socklen_t * len) {
+	return syscall(SYSCALL_GETSOCKOPT, sockfd, level, name, value, len);
+}
+
+int setsockopt(int sockfd, int level, int name, const void * value, socklen_t len) {
+	return syscall(SYSCALL_SETSOCKOPT, sockfd, level, name, value, len);
+}

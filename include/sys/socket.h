@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stddef.h>
 #include <arpa/inet.h>
 
 typedef struct {
@@ -55,8 +56,18 @@ enum {
 	AF_BLUETOOTH = 31,
 };
 
+enum {
+	SOL_SOCKET = 1,
+};
+
+enum {
+	SO_RCVTIMEO = 20,
+};
+
 int socket(int domain, int type, int protocol);
 int connect(int sockfd, struct sockaddr * addr, socklen_t addrlen);
 int bind(int sockfd, const struct sockaddr * addr, socklen_t addrlen);
 ssize_t sendto(int sockfd, const void * buf, size_t len, int flags, const struct sockaddr * dest_addr, socklen_t addrlen);
 ssize_t recvfrom(int sockfd, void * buf, size_t len, int flags, struct sockaddr * src_addr, socklen_t * addrlen);
+int getsockopt(int sockfd, int level, int name, void * value, socklen_t * len);
+int setsockopt(int sockfd, int level, int name, const void * value, socklen_t len);
