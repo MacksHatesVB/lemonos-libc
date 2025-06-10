@@ -160,7 +160,7 @@ void args_print_version(int argc, char * argv[]) {
 }
 
 int args_type_check(char * arg, args_option_t * option) {
-	if (!option->wants_argument || !arg || option->type == TYPE_NULL) {
+	if (!option->wants_argument || !arg || option->type == TYPE_NULL || option->type == TYPE_STRING) {
 		return 0;
 	}
 	if (settings.allow_bad_types || ((option->flags & ARG_DISABLE_CHECKS) != 0) || option->type == TYPE_BOOL) {
