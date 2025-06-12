@@ -14,5 +14,5 @@ int display_resize(display_t * display, int width, int height) {
 }
 
 int display_crunch(display_t * display, int bpp) {
-	return lctl(LCTL_DISPLAY_RESIZE, display, bpp);
+	return lctl(LCTL_DISPLAY_CRUNCH, display, bpp);
 }
