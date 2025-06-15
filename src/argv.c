@@ -55,9 +55,6 @@ args_option_t * args_find(char * arg, int optionc, args_option_t * options) {
 	char * long_name = arg + 2; // get past --
 	switch (is_short) {
 		case 1:
-			if (options->short_name == 0) {
-				return NULL; // deactivated
-			}
 			for (int i = 0; i < optionc; i++) {
 				args_option_t * option = &options[i];
 				if (option->short_name == short_name) {
@@ -66,11 +63,11 @@ args_option_t * args_find(char * arg, int optionc, args_option_t * options) {
 			}
 			break;
 		case 0:
-			if (!options->long_name) {
-				return NULL; // deactivated
-			}
 			for (int i = 0; i < optionc; i++) {
 				args_option_t * option = &options[i];
+				if (!option->long_name) {
+					continue;
+				}
 				if (option->long_name && strcmp(option->long_name, long_name) == 0) {
 					return option;
 				}
