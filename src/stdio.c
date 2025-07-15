@@ -58,8 +58,12 @@ int mode_to_flags(char * mode) {
 }
 
 FILE * fopen(char * pathname, char * mode) {
+	int fd = open(pathname, mode_to_flags(mode), 0644);
+	if (fd <= 0) {
+		return NULL;
+	}
 	FILE * fp = malloc(sizeof(FILE));
-	fp->fd = open(pathname, mode_to_flags(mode));
+	fp->fd = fd;
 	fp->offset = 0;
 	return fp; // todo: impliment
 }

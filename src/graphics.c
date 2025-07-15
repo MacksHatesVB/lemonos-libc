@@ -192,7 +192,7 @@ void rect_2d_ckdraw(rect_2d_t * rect2, rect_2d_t * rect, int thresh) {
 			tmp = alpha_calculate(top & 0xff00ff00, 0) & 0x0000ff00;
 			top &= 0xffff00ff;
 			top |= tmp & 0x00ffffff;
-			*(dest + b) = alpha_calculate(top, bottom); // chroma_key_calculate(*(src + b), *(dest + b), 0x00ff0000, thresh);
+			*(dest + b) = alpha_calculate(top, bottom);                                                       // chroma_key_calculate(*(src + b), *(dest + b), 0x00ff0000, thresh);
 		}
 	}
 	return;

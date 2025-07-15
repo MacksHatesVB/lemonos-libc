@@ -3,11 +3,17 @@
 #include <stdlib.h>
 #include <sys/syscall.h>
 
+/*
 int open(const char * name, int flags, ...) {
 	return syscall(SYSCALL_OPEN, name, flags);
 }
+*/
 
-ssize_t write(int fd, const void * buf, size_t count) {
+int creat(char * name, uint32_t mode) {
+	return syscall(SYSCALL_CREAT, name, mode);
+}
+
+ssize_t write(int fd, void * buf, size_t count) {
 	return syscall(SYSCALL_WRITE, fd, buf, count);
 }
 

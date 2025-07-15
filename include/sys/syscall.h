@@ -21,6 +21,7 @@ enum {
 	SYSCALL_BREAK, // do nothing
 	SYSCALL_OLDSTAT, // do nothing
 	SYSCALL_LSEEK = 140, // seek file descriptor
+	SYSCALL_GETDENTS = 141,
 	SYSCALL_GETPID = 20, // get process id
 	SYSCALL_MOUNT, // mount (possibly?)
 	SYSCALL_UMOUNT, // unmount (possibly?)

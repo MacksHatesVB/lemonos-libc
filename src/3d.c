@@ -43,19 +43,19 @@ void create_rotmat(mat3x3_t * mat, float deg, int axis) {
 	float θ = deg * 0.0174;
 	switch (axis) {
 		case X_AXIS:
-			mat->v[0][0] = 1; mat->v[0][1] = 0; mat->v[0][2] = 0;
-			mat->v[1][0] = 0; mat->v[1][1] = fcos(θ); mat->v[1][2] = -fsin(θ);
-			mat->v[2][0] = 0; mat->v[2][1] = fsin(θ); mat->v[2][2] = fcos(θ);
+			mat->v[0][0] = 1; mat->v[0][1] = 0;		mat->v[0][2] = 0;
+			mat->v[1][0] = 0; mat->v[1][1] = fcos(θ);	mat->v[1][2] = -fsin(θ);
+			mat->v[2][0] = 0; mat->v[2][1] = fsin(θ);	mat->v[2][2] = fcos(θ);
 			return;
 		case Y_AXIS:
-			mat->v[0][0] = fcos(θ); mat->v[0][1] = 0; mat->v[0][2] = fsin(θ);
-			mat->v[1][0] = 0; mat->v[1][1] = 1; mat->v[1][2] = 0;
+			mat->v[0][0] = fcos(θ);	 mat->v[0][1] = 0; mat->v[0][2] = fsin(θ);
+			mat->v[1][0] = 0;	 mat->v[1][1] = 1; mat->v[1][2] = 0;
 			mat->v[2][0] = -fsin(θ); mat->v[2][1] = 0; mat->v[2][2] = fcos(θ);
 			return;
 		case Z_AXIS:
 			mat->v[0][0] = fcos(θ); mat->v[0][1] = -fsin(θ); mat->v[0][2] = 0;
-			mat->v[1][0] = fsin(θ); mat->v[1][1] = fcos(θ); mat->v[1][2] = 0;
-			mat->v[2][0] = 0; mat->v[2][1] = 0; mat->v[2][2] = 1;
+			mat->v[1][0] = fsin(θ); mat->v[1][1] = fcos(θ);	 mat->v[1][2] = 0;
+			mat->v[2][0] = 0;	mat->v[2][1] = 0;	 mat->v[2][2] = 1;
 			return;
 	}
 }
