@@ -7,6 +7,7 @@
 *.py
 *.tar
 *.private
+*.swp
 main
 build/
 build/*
