@@ -18,7 +18,9 @@ SECTIONS
 			*(.reloc .reloc.*)
 		}
 		.rel : {
+			__relsym = .;
 			*(.rel .rel.*)
+			__relsym_end = .;
 		}
 		.interp : {
 			*(.interp .interp.*)

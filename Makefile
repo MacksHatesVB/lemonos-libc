@@ -91,7 +91,7 @@ build_avx: $(AVX_OBJECTS) $(AVX_ASM_OBJECTS)
 	$(AR) cr $(AVX_OUTPUT) $^
 	chmod $(OUTPUT_PERMS) $(AVX_OUTPUT)
 
-test:
+test: $(OUTPUT)
 	$(CC) $(CCFLAGS) $(TEST_PROGRAM) -c -o $(TEST_OUTPUT).o
 	$(LD) $(LDFLAGS) $(TEST_OUTPUT).o $(OUTPUT) -o $(TEST_OUTPUT)
 

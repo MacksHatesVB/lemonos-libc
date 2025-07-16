@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <cpufeats.h>
 #include <unistd.h>
+#include <reloc.h>
 #include <stdio.h>
 
 int __is_lemonos = 1;
@@ -14,6 +15,7 @@ int __attribute__((weak)) main(int argc, char * argv[]) {
 
 // now we must initialise the runtime
 int __attribute__((optimize("-O0"))) __runtime_entry(int argc, char * argv[]) {
+	__reloc_setup();
 	__is_lemonos = syscall(222) >= 0; // on any other OS 222 is undefined syscall and will return -1, on LemonOS this is getlocale() (i think?)
 	__locale_init();
 	__cpufeats_init();
