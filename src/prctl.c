@@ -3,7 +3,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 
-int prctl(const int op, ...) {
+/*int prctl(const int op, ...) {
 	va_list listp;
 	va_list * argv;
 	va_start(listp, op);
@@ -15,3 +15,4 @@ int prctl(const int op, ...) {
 	uint32_t arg5 = (uint32_t) va_arg(*argv, uint32_t);
 	return syscall(SYSCALL_PRCTL, arg1, arg2, arg3, arg4, arg5);
 }
+*/
