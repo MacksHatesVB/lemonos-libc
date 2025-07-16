@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <sys/prctl.h>
 
 // program which depends on elf relocations
 
