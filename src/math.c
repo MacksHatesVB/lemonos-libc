@@ -1,6 +1,6 @@
-#include <math.h>
+#include "math.h"
 #include <stdio.h>
-
+// TO DO: Mod, pow, not suck and programming, trig, blah
 uint32_t round32(uint32_t x, uint32_t y) {
 	return (x + (y - 1)) & ~(y - 1);
 }
@@ -11,16 +11,43 @@ int scale_range32(int value, int xMin, int xMax, int yMin, int yMax) {
 	return yMin + (absolute * tmp);
 }
 
-// works for all cases where y is 1
-float pow(float x, float y) {
-	return x;
+long double pow(long double x, long double y){
+    return x; // if y int for loop, else taylor series or smthn
+}
+
+double ln(double x){
+    if (x <= 0.0) return -1.0 / 0.0; // -INFINITY or error
+
+    double_cast dc;
+    dc.d = x;
+    int exponent = ((dc.u >> 52) & 0x7FF) - 1023;
+
+    // Normalize mantissa to range [1, 2)
+    dc.u = (dc.u & ((1ULL << 52) - 1)) | (1023ULL << 52);
+    double m = dc.d;
+
+    // ln(m) using log(1 + y) approximation with y = (m - 1)/(m + 1)
+    double y = (m - 1) / (m + 1);
+    double y2 = y * y;
+    double term = y;
+    double result = 0.0;
+
+    for (int i = 1; i <= 19; i += 2) {
+        result += term / i;
+        term *= y2;
+    }
+
+    result *= 2.0;
+
+    // ln(x) = ln(m) + exponent * ln(2)
+    return result + exponent * M_LN2;
 }
 
 long double powl(long double x, long double y) {
 	return x;
 }
 
-long double logl(long double base, long double number) {
+/*long double logl(long double base, long double number) {
         long double v = 1;
         long double error = LOG_ERROR;
         int i = LOG_ITERATIONS;
@@ -35,7 +62,7 @@ long double logl(long double base, long double number) {
                 v += error;
         }
         return v;
-}
+}*/
 
 double deg2rad(double deg) {
         return deg * 0.017453292516666667;
